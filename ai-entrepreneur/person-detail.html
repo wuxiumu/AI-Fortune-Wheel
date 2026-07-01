@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>名人详情 · AI Fortune Wheel</title>
+  <meta name="description" content="AI 行业领袖详细信息">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">🔮</span>
+          <span class="logo-text">AI Fortune Wheel</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">首页</a>
+          <a href="personalities.html" class="active">名人榜</a>
+          <a href="companies.html">企业榜</a>
+          <a href="admin/" class="btn btn-ghost btn-sm">管理后台</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Detail Content -->
+  <section class="detail-section">
+    <div class="container">
+      <div class="detail-card" id="personDetail">
+        <div class="loading">加载中...</div>
+      </div>
+
+      <!-- 相关推荐 -->
+      <div class="related-section">
+        <h2 class="section-title">相关推荐</h2>
+        <div class="related-grid" id="relatedGrid"></div>
+      </div>
+
+      <!-- 返回按钮 -->
+      <div class="back-action">
+        <a href="personalities.html" class="btn btn-ghost">
+          <span>← 返回名人榜</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="logo">
+            <span class="logo-icon">🔮</span>
+            <span class="logo-text">AI Fortune Wheel</span>
+          </div>
+          <p>探索 AI 领袖之间的商业契合度</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">首页</a>
+          <a href="personalities.html">名人榜</a>
+          <a href="companies.html">企业榜</a>
+          <a href="admin/">管理后台</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 AI Fortune Wheel. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let allPersonalities = [];
+
+    // 从 API 加载数据
+    async function loadData() {
+      try {
+        // 获取 URL 参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const personName = urlParams.get('name');
+
+        if (!personName) {
+          showError('缺少名人参数');
+          return;
+        }
+
+        const response = await fetch(`api/person-detail.php?name=${encodeURIComponent(personName)}`);
+        const result = await response.json();
+
+        if (result.success) {
+          renderDetail(result.data);
+          renderRelated(result.related);
+        } else {
+          showError('未找到该名人信息');
+        }
+      } catch (error) {
+        console.error('加载数据失败:', error);
+        showError('加载失败，请稍后重试');
+      }
+    }
+
+    // 渲染详情
+    function renderDetail(person) {
+      document.title = `${person.name} · AI Fortune Wheel`;
+
+      const age = calculateAge(person.birth);
+      const tags = person.tags.split(',').map(t => t.trim());
+
+      document.getElementById('personDetail').innerHTML = `
+        <div class="detail-header">
+          <div class="detail-icon">👤</div>
+          <div class="detail-info">
+            <h1 class="detail-name">${person.name}</h1>
+            <div class="detail-meta">
+              <span class="meta-badge">${person.category}</span>
+              <span class="status-badge status-${person.status}">
+                ${person.status === 'active' ? '活跃' : '不活跃'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-content">
+          <div class="detail-section-card">
+            <h3 class="section-heading">基本信息</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-label">公司</div>
+                <div class="info-value">${person.company}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">职位</div>
+                <div class="info-value">${person.role}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">生日</div>
+                <div class="info-value">${person.birth}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">年龄</div>
+                <div class="info-value">${age} 岁</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section-card">
+            <h3 class="section-heading">命理信息</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-label">星座</div>
+                <div class="info-value highlight">${person.zodiac}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">生肖</div>
+                <div class="info-value highlight">${person.constellation}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section-card">
+            <h3 class="section-heading">标签</h3>
+            <div class="tags-list">
+              ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+          </div>
+
+          <div class="detail-section-card full-width">
+            <h3 class="section-heading">个人简介</h3>
+            <p class="bio-text">${person.bio}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // 渲染相关推荐
+    function renderRelated(person) {
+      const related = allPersonalities
+        .filter(p => p.category === person.category && p.name !== person.name)
+        .slice(0, 3);
+
+      if (related.length === 0) return;
+
+      document.getElementById('relatedGrid').innerHTML = related.map(p => `
+        <a href="person-detail.html?name=${encodeURIComponent(p.name)}" class="related-card">
+          <div class="related-name">${p.name}</div>
+          <div class="related-company">${p.company}</div>
+          <div class="related-role">${p.role}</div>
+        </a>
+      `).join('');
+    }
+
+    // 计算年龄
+    function calculateAge(birthDate) {
+      if (!birthDate) return '-';
+      const today = new Date();
+      const birth = new Date(birthDate);
+      let age = today.getFullYear() - birth.getFullYear();
+      const monthDiff = today.getMonth() - birth.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
+      }
+      return age;
+    }
+
+    // 显示错误
+    function showError(message) {
+      document.getElementById('personDetail').innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">⚠️</div>
+          <h3>${message}</h3>
+          <p>请返回名人榜重新选择</p>
+        </div>
+      `;
+    }
+
+    // 初始化
+    loadData();
+  </script>
+<script src="../js/analytics.js"></script>
+</body>
+</html>

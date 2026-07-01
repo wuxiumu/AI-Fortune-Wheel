@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>企业管理 · AI Fortune Wheel</title>
+  <meta name="description" content="管理 AI 企业数据">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <!-- 侧边栏 -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="logo">
+        <span class="logo-icon">🔮</span>
+        <span class="logo-text">AI Fortune Wheel</span>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-title">数据管理</div>
+        <a href="index.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>仪表板</span>
+        </a>
+        <a href="personalities.html" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span>名人管理</span>
+        </a>
+        <a href="companies.html" class="nav-item active">
+          <span class="nav-icon">🏢</span>
+          <span>企业管理</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-title">前台预览</div>
+        <a href="../index.html" class="nav-item">
+          <span class="nav-icon">🏠</span>
+          <span>首页</span>
+        </a>
+        <a href="../personalities.html" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span>名人榜</span>
+        </a>
+        <a href="../companies.html" class="nav-item">
+          <span class="nav-icon">🏢</span>
+          <span>企业榜</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-title">系统</div>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">📦</span>
+          <span>数据备份</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">⚙️</span>
+          <span>系统设置</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">📖</span>
+          <span>使用文档</span>
+        </a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="../index.html" class="back-link">
+        <span>← 返回前台</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main class="main-content">
+    <header class="content-header">
+      <div class="header-left">
+        <h1 class="page-title">企业管理</h1>
+        <p class="page-desc">管理和编辑 AI 企业数据</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary" id="addBtn">
+          <span class="btn-icon">➕</span>
+          <span>添加企业</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="content-body">
+      <!-- 筛选栏 -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <input type="text" class="filter-input" id="searchInput" placeholder="搜索企业...">
+        </div>
+        <div class="filter-group">
+          <select class="filter-select" id="statusFilter">
+            <option value="all">全部状态</option>
+            <option value="active">运营中</option>
+            <option value="inactive">已关闭</option>
+            <option value="acquired">被收购</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <select class="filter-select" id="industryFilter">
+            <option value="all">全部行业</option>
+            <option value="大模型公司">大模型公司</option>
+            <option value="AI基础设施公司">AI基础设施</option>
+            <option value="AI应用公司">AI应用</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 企业列表 -->
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>企业名称</th>
+              <th>国家</th>
+              <th>成立时间</th>
+              <th>估值</th>
+              <th>行业</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="companiesTable">
+            <tr>
+              <td colspan="7" class="empty-state">加载中...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 分页 -->
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </main>
+
+  <!-- 添加/编辑模态框 -->
+  <div class="modal" id="companyModal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">添加企业</h2>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <form id="companyForm" class="modal-body">
+        <div class="form-group">
+          <label class="form-label">企业名称 <span class="required">*</span></label>
+          <input type="text" class="form-input" name="name" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">国家 <span class="required">*</span></label>
+            <input type="text" class="form-input" name="country" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">成立时间 <span class="required">*</span></label>
+            <input type="number" class="form-input" name="founded" min="1900" max="2030" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">估值 <span class="required">*</span></label>
+            <input type="text" class="form-input" name="valuation" placeholder="例如: $150B" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">融资阶段</label>
+            <select class="form-select" name="stage">
+              <option value="Pre-IPO">Pre-IPO</option>
+              <option value="Series A">A轮</option>
+              <option value="Series B">B轮</option>
+              <option value="Series C">C轮</option>
+              <option value="Series D">D轮</option>
+              <option value="IPO">已上市</option>
+              <option value="子公司">子公司</option>
+              <option value="自筹资金">自筹资金</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">主要产品 <span class="required">*</span></label>
+          <input type="text" class="form-input" name="products" placeholder="多个产品用逗号分隔" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">行业标签 <span class="required">*</span></label>
+          <input type="text" class="form-input" name="industry" placeholder="多个标签用逗号分隔" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">创始人 <span class="required">*</span></label>
+          <input type="text" class="form-input" name="founders" placeholder="多个创始人用逗号分隔" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">简介 <span class="required">*</span></label>
+          <textarea class="form-textarea" name="description" rows="3" required></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">状态</label>
+            <select class="form-select" name="status">
+              <option value="active">运营中</option>
+              <option value="inactive">已关闭</option>
+              <option value="acquired">被收购</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" id="cancelBtn">取消</button>
+          <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    let companies = [];
+    let currentPage = 1;
+    const pageSize = 10;
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      loadCompanies();
+      initEventListeners();
+    });
+
+    async function loadCompanies() {
+      try {
+        // 这里应该调用后端 API 获取数据
+        // 暂时使用模拟数据
+        companies = [
+          {
+            id: 1,
+            name: 'OpenAI',
+            country: '美国',
+            founded: 2015,
+            valuation: '$150B',
+            products: 'GPT-4, ChatGPT',
+            industry: '大模型公司',
+            founders: 'Sam Altman, Greg Brockman',
+            description: '全球领先的AI研究和部署公司',
+            stage: 'Pre-IPO',
+            status: 'active'
+          },
+          {
+            id: 2,
+            name: 'NVIDIA',
+            country: '美国',
+            founded: 1993,
+            valuation: '$3T',
+            products: 'GPU, CUDA',
+            industry: 'AI基础设施公司',
+            founders: 'Jensen Huang',
+            description: '全球领先的GPU制造商',
+            stage: 'IPO',
+            status: 'active'
+          }
+        ];
+        renderTable();
+      } catch (error) {
+        console.error('加载企业数据失败:', error);
+      }
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('companiesTable');
+      const start = (currentPage - 1) * pageSize;
+      const end = start + pageSize;
+      const pageData = companies.slice(start, end);
+
+      if (pageData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="empty-state">暂无数据</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = pageData.map(company => `
+        <tr>
+          <td><strong>${company.name}</strong></td>
+          <td>${company.country}</td>
+          <td>${company.founded}</td>
+          <td>${company.valuation}</td>
+          <td>${company.industry}</td>
+          <td><span class="status-badge status-${company.status}">${getStatusText(company.status)}</span></td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon" onclick="editCompany(${company.id})" title="编辑">✏️</button>
+              <button class="btn-icon" onclick="deleteCompany(${company.id})" title="删除">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      renderPagination();
+    }
+
+    function getStatusText(status) {
+      const map = {
+        active: '运营中',
+        inactive: '已关闭',
+        acquired: '被收购'
+      };
+      return map[status] || status;
+    }
+
+    function renderPagination() {
+      const totalPages = Math.ceil(companies.length / pageSize);
+      const pagination = document.getElementById('pagination');
+
+      if (totalPages <= 1) {
+        pagination.innerHTML = '';
+        return;
+      }
+
+      let html = '';
+      for (let i = 1; i <= totalPages; i++) {
+        html += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+      }
+      pagination.innerHTML = html;
+    }
+
+    function changePage(page) {
+      currentPage = page;
+      renderTable();
+    }
+
+    function initEventListeners() {
+      // 添加按钮
+      document.getElementById('addBtn').addEventListener('click', () => {
+        openModal('添加企业');
+      });
+
+      // 搜索
+      document.getElementById('searchInput').addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const filtered = companies.filter(c =>
+          c.name.toLowerCase().includes(query) ||
+          c.country.toLowerCase().includes(query)
+        );
+        // 渲染过滤结果
+      });
+
+      // 模态框关闭
+      document.getElementById('modalClose').addEventListener('click', closeModal);
+      document.getElementById('cancelBtn').addEventListener('click', closeModal);
+      document.querySelector('.modal-overlay').addEventListener('click', closeModal);
+
+      // 表单提交
+      document.getElementById('companyForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+
+        // 这里应该调用后端 API 保存数据
+        console.log('保存数据:', data);
+        closeModal();
+        loadCompanies();
+      });
+    }
+
+    function openModal(title) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('companyModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('companyModal').classList.remove('show');
+      document.body.style.overflow = '';
+      document.getElementById('companyForm').reset();
+    }
+
+    function editCompany(id) {
+      const company = companies.find(c => c.id === id);
+      if (!company) return;
+
+      openModal('编辑企业');
+      // 填充表单数据
+      const form = document.getElementById('companyForm');
+      form.name.value = company.name;
+      form.country.value = company.country;
+      form.founded.value = company.founded;
+      form.valuation.value = company.valuation;
+      form.stage.value = company.stage;
+      form.products.value = company.products;
+      form.industry.value = company.industry;
+      form.founders.value = company.founders;
+      form.description.value = company.description;
+      form.status.value = company.status;
+    }
+
+    async function deleteCompany(id) {
+      if (!confirm('确定要删除这个企业吗？')) return;
+
+      // 这里应该调用后端 API 删除数据
+      console.log('删除企业:', id);
+      loadCompanies();
+    }
+
+    // 全局函数
+    window.editCompany = editCompany;
+    window.deleteCompany = deleteCompany;
+    window.changePage = changePage;
+  </script>
+<script src="../../js/analytics.js"></script>
+</body>
+</html>

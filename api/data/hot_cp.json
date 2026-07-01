@@ -1,0 +1,74 @@
+[
+  {
+    "system": "east",
+    "a": 0,
+    "b": 1,
+    "nameA": "子鼠A",
+    "nameB": "丑牛B",
+    "reason": "六合・官配荧幕CP",
+    "heat": 500
+  },
+  {
+    "system": "east",
+    "a": 5,
+    "b": 11,
+    "nameA": "巳蛇A",
+    "nameB": "亥猪B",
+    "reason": "相冲・绯闻翻车",
+    "heat": 420
+  },
+  {
+    "system": "west",
+    "a": 4,
+    "b": 10,
+    "nameA": "狮子A",
+    "nameB": "水瓶B",
+    "reason": "对冲・爱恨拉扯大瓜",
+    "heat": 380
+  },
+  {
+    "system": "west",
+    "a": 0,
+    "b": 8,
+    "nameA": "白羊A",
+    "nameB": "射手B",
+    "reason": "三分相・荧幕天选",
+    "heat": 360
+  },
+  {
+    "system": "east",
+    "a": 2,
+    "b": 6,
+    "nameA": "寅虎A",
+    "nameB": "午马B",
+    "reason": "三合・圈内挚友二搭",
+    "heat": 340
+  },
+  {
+    "system": "west",
+    "a": 7,
+    "b": 11,
+    "nameA": "天蝎A",
+    "nameB": "双鱼B",
+    "reason": "三分相・荧幕天选",
+    "heat": 320
+  },
+  {
+    "system": "east",
+    "a": 8,
+    "b": 0,
+    "nameA": "申猴A",
+    "nameB": "子鼠B",
+    "reason": "三合・圈内挚友二搭",
+    "heat": 300
+  },
+  {
+    "system": "west",
+    "a": 1,
+    "b": 5,
+    "nameA": "金牛A",
+    "nameB": "处女B",
+    "reason": "三分相・荧幕天选",
+    "heat": 280
+  }
+]

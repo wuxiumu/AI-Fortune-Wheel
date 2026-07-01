@@ -1,0 +1,41 @@
+/* ============================================================
+   CSS 变量 — 全局主题色、字体、渐变
+   修改这里即可整站换肤
+   ============================================================ */
+:root{
+  --bg:#0c0a1d;
+  --bg2:#150f2e;
+  --panel:rgba(28,22,54,.66);
+  --panel-line:rgba(150,130,220,.18);
+  --panel-line-strong:rgba(150,130,220,.32);
+
+  --ink:#f3effc;
+  --ink-soft:#b3acd6;
+  --ink-faint:#7d769e;
+
+  --gold:#ffd56b;
+  --gold-glow:#ffb938;
+  --red:#ff4d6d;
+  --red-deep:#d4264f;
+  --gray:#8a83a8;
+
+  /* 选手 A 粉 / 选手 B 青 */
+  --a:#ff5c9d;
+  --b:#4fd6e6;
+
+  /* 渐变色 */
+  --accent:linear-gradient(120deg,#ff7eb3,#ff5c9d 40%,#b57bff 75%,#5b8def);
+  --accent-east:linear-gradient(120deg,#9fe2a0,#ffd479 45%,#ff7a59 80%);
+  --accent-west:linear-gradient(120deg,#b57bff,#ff6fd8 45%,#5b8def);
+
+  /* 字体：优先使用系统字体，无需下载 */
+  --serif:"Noto Serif SC","Source Han Serif SC","STSong","SimSun","Songti SC",serif;
+  --sans:"Noto Sans SC","Source Han Sans SC","Microsoft YaHei","PingFang SC","Hiragino Sans GB","WenQuanYi Micro Hei",system-ui,sans-serif;
+  --mono:"Space Mono","SF Mono","Monaco","Inconsolata","Fira Code","Consolas",ui-monospace,monospace;
+
+  /* 尺寸 */
+  --max-w:1120px;
+  --radius-sm:11px;
+  --radius-md:16px;
+  --radius-lg:24px;
+}

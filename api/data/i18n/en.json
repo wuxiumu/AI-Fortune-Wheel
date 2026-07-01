@@ -1,0 +1,48 @@
+{
+  "site": {
+    "title": "Melon Destiny Wheel",
+    "subtitle": "East × West CP Compatibility",
+    "slogan": "Celebrity CP Matching · Gossip Fortune · Zodiac & Elements Dual Read · Entertainment Only"
+  },
+  "header": {
+    "eyebrow": "EAST × WEST · CP DESTINY ROULETTE",
+    "east_tab": "Eastern Zodiac",
+    "east_sub": "ZODIAC · WU XING",
+    "west_tab": "Western Astrology",
+    "west_sub": "ASTRO · ELEMENTS"
+  },
+  "picker": {
+    "side_a": "Player A",
+    "side_b": "Player B",
+    "placeholder_a": "Name A (optional)",
+    "placeholder_b": "Name B (optional)"
+  },
+  "actions": {
+    "spin": "Spin · Test This Pair",
+    "random": "🎲 Random Pick"
+  },
+  "result": {
+    "score_label": "Match %",
+    "share_poster": "🖼️ Generate Poster",
+    "share_copy": "📋 Copy Text",
+    "share_native": "🔗 Share",
+    "toast_copied": "Copied to clipboard ✓",
+    "toast_copy_fail": "Copy failed",
+    "toast_no_result": "Please test a pair first",
+    "tone_gold": "Gold · High Match",
+    "tone_red": "Red · Controversial",
+    "tone_gray": "Gray · Neutral"
+  },
+  "footer": {
+    "about": "About",
+    "help": "Help & Support",
+    "legal": "Legal",
+    "disclaimer": "Entertainment only, please",
+    "back_top": "↑ Back to top"
+  },
+  "toast": {
+    "success": "Success",
+    "error": "Error",
+    "loading": "Processing..."
+  }
+}

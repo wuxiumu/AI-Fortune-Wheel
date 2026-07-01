@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# 缓存
+api/cache/kv/
+api/cache/counters/
+api/cache/sorted/
+api/cache/logs/
+
+# 敏感配置
+api/config/config.local.php
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 构建产物
+dist/
+build/
+
+# 日志
+*.log

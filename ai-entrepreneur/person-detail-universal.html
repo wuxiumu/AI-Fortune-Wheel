@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>详情 · AI 创投命理盘</title>
+  <meta name="description" content="AI 名人详细信息">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/detail-universal.css">
+</head>
+<body class="detail-universal">
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html" class="logo">
+          <span class="logo-icon"></span>
+          <span class="logo-text">AI 创投命理盘</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">首页</a>
+          <a href="synastry.html">合盘</a>
+          <a href="personalities.html">名人榜</a>
+          <a href="companies.html">企业榜</a>
+          <a href="admin/" class="btn btn-ghost btn-sm">管理后台</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Loading -->
+  <div id="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>加载中...</p>
+  </div>
+
+  <!-- Content -->
+  <div id="content" style="display: none;">
+    <!-- Hero Section -->
+    <section class="detail-hero" id="heroSection"></section>
+
+    <!-- Main Content -->
+    <div class="container">
+      <div id="mainContent"></div>
+
+      <!-- Back Action -->
+      <div class="back-action">
+        <a href="personalities.html" class="btn btn-ghost">
+          <span>← 返回名人榜</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="logo">
+            <span class="logo-icon">🔮</span>
+            <span class="logo-text">AI 创投命理盘</span>
+          </div>
+          <p>探索 AI 领袖之间的商业契合度</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">首页</a>
+          <a href="personalities.html">名人榜</a>
+          <a href="companies.html">企业榜</a>
+          <a href="admin/">管理后台</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 AI 创投命理盘 · 仅供娱乐参考</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    async function fetchWithTimeout(url, timeoutMs = 3000) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(timer);
+        return response;
+      } catch (e) {
+        clearTimeout(timer);
+        throw e;
+      }
+    }
+
+    // 从 API 加载数据
+    async function loadDetail() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const name = urlParams.get('name');
+
+      if (!name) {
+        showError('缺少参数');
+        return;
+      }
+
+      try {
+        const response = await fetchWithTimeout(`api/detail.php?name=${encodeURIComponent(name)}`);
+        const result = await response.json();
+
+        if (result.success) {
+          renderDetail(result.data);
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('content').style.display = 'block';
+        } else {
+          showError('未找到详情数据');
+        }
+      } catch (error) {
+        console.error('加载失败:', error);
+        showError('加载失败');
+      }
+    }
+
+    // 渲染详情
+    function renderDetail(data) {
+      // 渲染 Hero
+      document.getElementById('heroSection').innerHTML = `
+        <div class="hero-bg"></div>
+        <div class="container">
+          <div class="hero-content">
+            <h1 class="hero-title">${data.title || 'Unknown'}</h1>
+            ${data.subtitle ? `<p class="hero-subtitle">${data.subtitle}</p>` : ''}
+            ${data.name_en ? `<p class="hero-name-en">${data.name_en}</p>` : ''}
+          </div>
+          <div class="hero-avatar">
+            <div class="avatar-frame">
+              <img src="assets/avatars/${data.avatar || 'default.svg'}" alt="${data.title}" class="avatar-img">
+              <div class="avatar-glow"></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      let mainHtml = '';
+
+      // 渲染双栏板块
+      mainHtml += '<div class="detail-grid"><div class="detail-column">';
+      let columnCount = 0;
+
+      data.sections.forEach((section, index) => {
+        mainHtml += `
+          <section class="info-card">
+            <h2 class="card-title">${section.title}</h2>
+            <div class="info-list">
+              ${section.items.map(item => `
+                <div class="info-item">
+                  <div class="item-content">
+                    <h4>${item.title || ''}</h4>
+                    <p>${item.content || ''}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+        `;
+
+        columnCount++;
+        if (columnCount === 2 && index < data.sections.length - 1) {
+          mainHtml += '</div><div class="detail-column">';
+          columnCount = 0;
+        }
+      });
+
+      mainHtml += '</div></div>';
+
+      // 渲染核心名言
+      if (data.core_quote) {
+        mainHtml += `
+          <section class="quote-card full-width">
+            <div class="quote-mark">"</div>
+            <p class="quote-text">${data.core_quote.text}</p>
+            <p class="quote-author">— ${data.core_quote.author || 'Unknown'}</p>
+          </section>
+        `;
+      }
+
+      // 渲染公司使命
+      if (data.companies && data.companies.length > 0) {
+        mainHtml += `
+          <section class="info-card full-width">
+            <h2 class="card-title">主要公司与使命</h2>
+            <div class="companies-grid">
+              ${data.companies.map(company => `
+                <div class="company-item">
+                  <div class="company-logo">🏢</div>
+                  <h4>${company.name}</h4>
+                  <p class="company-mission">使命：${company.mission || ''}</p>
+                  <p class="company-goal">目标：${company.goal || ''}</p>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+        `;
+      }
+
+      // 渲染风险与挑战
+      if (data.risks && data.risks.length > 0) {
+        mainHtml += `
+          <section class="info-card full-width">
+            <h2 class="card-title">风险与挑战认知</h2>
+            <div class="risk-grid">
+              ${data.risks.map((risk, index) => `
+                <div class="risk-item">${index + 1}. ${risk}</div>
+              `).join('')}
+            </div>
+          </section>
+        `;
+      }
+
+      // 渲染终极目标
+      if (data.ultimate_goal) {
+        mainHtml += `
+          <section class="info-card full-width">
+            <h2 class="card-title">终极目标</h2>
+            <div class="ultimate-goal">
+              <p class="ultimate-text">${data.ultimate_goal}</p>
+            </div>
+          </section>
+        `;
+      }
+
+      // 渲染经典语录
+      if (data.quotes && data.quotes.length > 0) {
+        mainHtml += `
+          <section class="info-card full-width">
+            <h2 class="card-title">经典语录</h2>
+            <div class="quotes-grid">
+              ${data.quotes.map(quote => `
+                <div class="quote-item">
+                  <p>"${quote}"</p>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+        `;
+      }
+
+      // 渲染时间线
+      if (data.timeline && data.timeline.length > 0) {
+        mainHtml += `
+          <section class="info-card full-width">
+            <h2 class="card-title">时间线（部分里程碑）</h2>
+            <div class="timeline">
+              ${data.timeline.map(item => `
+                <div class="timeline-item">
+                  <div class="timeline-year">${item.year}</div>
+                  <div class="timeline-event">${item.event}</div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+        `;
+      }
+
+      document.getElementById('mainContent').innerHTML = mainHtml;
+    }
+
+    // 显示错误
+    function showError(message) {
+      document.getElementById('loading').innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">️</div>
+          <h3>${message}</h3>
+          <p>请返回名人榜重新选择</p>
+          <a href="personalities.html" class="btn btn-ghost" style="margin-top: 20px;">
+            <span>← 返回</span>
+          </a>
+        </div>
+      `;
+    }
+
+    document.addEventListener('DOMContentLoaded', loadDetail);
+  </script>
+  <script src="../js/analytics.js" defer></script>
+</body>
+</html>

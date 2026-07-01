@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <!-- 渐变背景 -->
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#1a0e24"/>
+      <stop offset="100%" style="stop-color:#0c0a1d"/>
+    </radialGradient>
+
+    <!-- 金色渐变 -->
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd56b"/>
+      <stop offset="100%" style="stop-color:#ffb938"/>
+    </linearGradient>
+
+    <!-- 粉色渐变 -->
+    <linearGradient id="pink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff7eb3"/>
+      <stop offset="100%" style="stop-color:#ff5c9d"/>
+    </linearGradient>
+
+    <!-- 紫色渐变 -->
+    <linearGradient id="purple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#b57bff"/>
+      <stop offset="100%" style="stop-color:#5b8def"/>
+    </linearGradient>
+
+    <!-- 发光效果 -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- 背景圆 -->
+  <circle cx="50" cy="50" r="48" fill="url(#bg)" stroke="url(#gold)" stroke-width="1.5"/>
+
+  <!-- 装饰星点 -->
+  <circle cx="25" cy="30" r="1" fill="#ffd56b" opacity="0.6"/>
+  <circle cx="75" cy="25" r="1.2" fill="#b57bff" opacity="0.7"/>
+  <circle cx="70" cy="70" r="0.8" fill="#ff5c9d" opacity="0.5"/>
+  <circle cx="30" cy="75" r="1" fill="#ffd56b" opacity="0.6"/>
+
+  <!-- 外圈装饰环 -->
+  <circle cx="50" cy="50" r="38" fill="none" stroke="url(#gold)" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- 阴阳符号（左侧 - 东方） -->
+  <g transform="translate(50, 50)">
+    <!-- 阴（黑色半圆） -->
+    <path d="M -18 0 A 18 18 0 0 1 18 0 A 9 9 0 0 1 0 0 A 9 9 0 0 0 -18 0 Z"
+          fill="url(#pink)" opacity="0.9" filter="url(#glow)"/>
+    <!-- 阳（白色半圆） -->
+    <path d="M 18 0 A 18 18 0 0 1 -18 0 A 9 9 0 0 1 0 0 A 9 9 0 0 0 18 0 Z"
+          fill="url(#purple)" opacity="0.9" filter="url(#glow)"/>
+    <!-- 阴中阳点 -->
+    <circle cx="0" cy="-9" r="3" fill="url(#purple)"/>
+    <!-- 阳中阴点 -->
+    <circle cx="0" cy="9" r="3" fill="url(#pink)"/>
+  </g>
+
+  <!-- 星盘符号（右侧装饰） -->
+  <g transform="translate(72, 28)" opacity="0.8">
+    <!-- 小星盘 -->
+    <circle cx="0" cy="0" r="8" fill="none" stroke="url(#gold)" stroke-width="0.8"/>
+    <line x1="0" y1="-8" x2="0" y2="8" stroke="url(#gold)" stroke-width="0.5"/>
+    <line x1="-8" y1="0" x2="8" y2="0" stroke="url(#gold)" stroke-width="0.5"/>
+    <circle cx="0" cy="0" r="2" fill="url(#gold)"/>
+  </g>
+
+  <!-- 五行符号（左下角装饰） -->
+  <g transform="translate(28, 72)" opacity="0.8">
+    <!-- 五角星简化 -->
+    <polygon points="0,-8 2.5,-2.5 8,-2.5 3.5,1.5 5,7.5 0,4 -5,7.5 -3.5,1.5 -8,-2.5 -2.5,-2.5"
+             fill="url(#gold)" opacity="0.9"/>
+  </g>
+
+  <!-- 中心文字 "瓜" 简化版 -->
+  <text x="50" y="55" font-family="serif" font-size="16" font-weight="bold"
+        fill="url(#gold)" text-anchor="middle" filter="url(#glow)">瓜</text>
+
+  <!-- 外圈光芒 -->
+  <circle cx="50" cy="50" r="46" fill="none" stroke="url(#pink)" stroke-width="0.3" opacity="0.4"/>
+</svg>

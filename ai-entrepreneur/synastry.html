@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 创投命理合盘 · 企业家 × 企业</title>
+  <meta name="description" content="AI 创投命理合盘 · 企业家 × 企业 · 人 × 人 · 企业 × 企业 —— 命格由成立日 / 生日推算，AI 现场解读">
+  <meta property="og:title" content="AI 创投命理合盘">
+  <meta property="og:description" content="AI 创投命理合盘 · 企业家 × 企业 · 人 × 人">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <!-- 字体使用系统字体栈（国内访问更快） -->
+  <style>
+    :root{
+      --serif: "Noto Serif SC", "Source Han Serif SC", "STSong", "SimSun", "Songti SC", serif;
+      --sans: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
+      --mono: "Space Mono", "SF Mono", "Monaco", "Inconsolata", "Fira Code", "Consolas", monospace;
+    }
+  </style>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="css/synastry.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ============ Header ============ -->
+  <header class="site-header">
+    <div class="eyebrow">AI 创投合盘 · 专业版</div>
+    <h1 class="site-title">AI 创投命理合盘</h1>
+    <div class="tagline">企业家 × 企业 · 人 × 人 · 企业 × 企业 —— 命格由<b>成立日 / 生日</b>推算，<b>AI 现场解读</b></div>
+
+    <div class="nav-links" style="margin-top: 20px;">
+      <a href="index.html">首页</a>
+      <a href="personalities.html">名人榜</a>
+      <a href="companies.html">企业榜</a>
+      <a href="admin/" class="btn btn-ghost btn-sm">管理后台</a>
+    </div>
+  </header>
+
+  <!-- ============ Deck (输入区) ============ -->
+  <div class="deck">
+    <div class="card" id="cardA">
+      <div class="role"><span class="dotc a"></span>对象 A</div>
+      <div class="typetog" data-side="a">
+        <button data-t="org" class="on">企业</button>
+        <button data-t="person">人物</button>
+      </div>
+      <div class="fld">
+        <label>快速选择（内置库）</label>
+        <select class="preset" data-side="a"></select>
+      </div>
+      <div class="fld">
+        <label id="lblNameA">企业名称</label>
+        <input class="nm" data-side="a" placeholder="如：英伟达" maxlength="20">
+      </div>
+      <div class="fld">
+        <label id="lblDateA">成立日期</label>
+        <input type="date" class="dt" data-side="a">
+      </div>
+      <div class="destiny-tag" id="dtagA">填好后自动推算命格…</div>
+    </div>
+
+    <div class="mid">
+      <div class="x-emblem"></div>
+    </div>
+
+    <div class="card" id="cardB">
+      <div class="role"><span class="dotc b"></span>对象 B</div>
+      <div class="typetog" data-side="b">
+        <button data-t="org" class="on">企业</button>
+        <button data-t="person">人物</button>
+      </div>
+      <div class="fld">
+        <label>快速选择（内置库）</label>
+        <select class="preset" data-side="b"></select>
+      </div>
+      <div class="fld">
+        <label id="lblNameB">企业名称</label>
+        <input class="nm" data-side="b" placeholder="如：特斯拉" maxlength="20">
+      </div>
+      <div class="fld">
+        <label id="lblDateB">成立日期</label>
+        <input type="date" class="dt" data-side="b">
+      </div>
+      <div class="destiny-tag" id="dtagB">填好后自动推算命格…</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn primary" id="run" disabled>合盘 · AI 解读</button>
+    <button class="btn ghost" id="rand">🎲 随机对碰</button>
+  </div>
+  <div class="note">内置日期为公开资料整理，仅供趣味测算参考</div>
+
+  <!-- ============ Result ============ -->
+  <div class="result" id="result">
+    <div class="synastry">
+      <div class="emblem">
+        <div class="badge a">
+          <div class="ring"><div class="zi" id="eZiA"></div></div>
+          <div class="nm" id="eNmA">—</div>
+          <div class="meta" id="eMetaA"></div>
+        </div>
+        <div class="connector">
+          <div class="score-big" id="eScore">
+            <span id="scoreNum">0</span>
+            <small>适配度 %</small>
+          </div>
+          <div class="conn-line tone-gray" id="connLine" data-rel=""></div>
+        </div>
+        <div class="badge b">
+          <div class="ring"><div class="zi" id="eZiB"></div></div>
+          <div class="nm" id="eNmB">—</div>
+          <div class="meta" id="eMetaB"></div>
+        </div>
+      </div>
+      <div class="r-tags" id="rTags"></div>
+      <div id="aiArea">
+        <div class="loading" id="loading">
+          <span class="spin"></span>AI 正在排盘解读…
+        </div>
+        <div id="aiOut" style="display:none">
+          <div class="r-headline" id="rHead"></div>
+          <div class="r-verdict" id="rVerdict"></div>
+          <div class="ai-badge">
+            <span class="pulse"></span>
+            <span id="aiSrc">由 Claude 实时生成</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="share-bar">
+      <span class="share-label">SHARE</span>
+      <button class="share-btn primary" id="sharePoster" title="生成海报图片">
+        <span class="ic">🖼️</span>生成海报
+      </button>
+      <button class="share-btn" id="shareCopy" title="复制分享文案">
+        <span class="ic">📋</span>复制文案
+      </button>
+      <button class="share-btn" id="shareNative" title="分享给好友">
+        <span class="ic">🔗</span>分享
+      </button>
+      <button class="btn ghost" id="again" style="margin-left:4px">再测一对</button>
+    </div>
+  </div>
+
+  <!-- 海报弹窗 -->
+  <div class="poster-modal" id="posterModal" role="dialog" aria-label="合盘海报预览">
+    <div class="modal-inner" style="position:relative">
+      <button class="close-btn" id="posterClose" aria-label="关闭">✕</button>
+      <h3>🖼️ 合盘海报</h3>
+      <div class="poster-preview" id="posterPreview"></div>
+      <div class="poster-actions">
+        <button class="share-btn primary" id="posterDownload">
+          <span class="ic">⬇️</span>保存图片
+        </button>
+        <button class="share-btn" id="posterShare">
+          <span class="ic">📤</span>发给朋友
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- ============ How It Works ============ -->
+  <section class="block">
+    <div class="block-head">
+      <span class="kicker">How it works</span>
+      <h2>四步出盘</h2>
+      <p>简单快速，立等可取</p>
+    </div>
+    <div class="how">
+      <div class="step">
+        <div class="n">STEP 01</div>
+        <h4>取命格</h4>
+        <p>用企业成立日 / 人物生日，推算生肖、年命五行与黄道星座，公开可查、人人可复算。</p>
+      </div>
+      <div class="step">
+        <div class="n">STEP 02</div>
+        <h4>算关系</h4>
+        <p>地支冲 / 六合 / 三合，叠加五行生克，跑出一个稳定可复现的适配度分数。</p>
+      </div>
+      <div class="step">
+        <div class="n">STEP 03</div>
+        <h4>AI 解读</h4>
+        <p>把双方命格与风格交给 Claude，现场写一段创投味的趣味解读，每一对都不一样。</p>
+      </div>
+      <div class="step">
+        <div class="n">STEP 04</div>
+        <h4>出海报</h4>
+        <p>一键生成可下载的高清合盘海报 —— 这就是可付费、可传播的交付物。</p>
+      </div>
+    </div>
+  </section>
+
+</div> <!-- /.wrap -->
+
+<!-- ============ Footer（与主站一致） ============ -->
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <!-- 品牌 -->
+    <div class="footer-brand">
+      <div class="logo" id="footerBrandName">吃瓜命理盘</div>
+      <div class="slogan" id="footerSlogan">
+        东西双体系 CP 速测，东方五行生肖 × 西方星盘星座，理性吃瓜，快乐磕糖。
+      </div>
+      <div class="footer-social" id="footerSocial" aria-label="社交媒体"></div>
+    </div>
+
+    <!-- 关于 -->
+    <div class="footer-col">
+      <h4>关于我们</h4>
+      <ul>
+        <li><a href="../pages/about.html">项目介绍</a></li>
+        <li><a href="../pages/design.html">🎨 设计思路</a></li>
+        <li><a href="../pages/about.html#team">团队</a></li>
+        <li><a href="../pages/about.html#story">品牌故事</a></li>
+      </ul>
+    </div>
+
+    <!-- 帮助 -->
+    <div class="footer-col">
+      <h4>帮助 &amp; 支持</h4>
+      <ul>
+        <li><a href="../pages/rosetta.html">📖 双体系对照</a></li>
+        <li><a href="../pages/faq.html">常见问题</a></li>
+        <li><a href="../pages/contact.html">联系我们</a></li>
+        <li><a href="../pages/faq.html#usage">使用说明</a></li>
+      </ul>
+    </div>
+
+    <!-- 法律 -->
+    <div class="footer-col">
+      <h4>法律 &amp; 协议</h4>
+      <ul>
+        <li><a href="../pages/disclaimer.html">免责声明</a></li>
+        <li><a href="../pages/disclaimer.html#privacy">隐私政策</a></li>
+        <li><a href="../pages/disclaimer.html#terms">服务条款</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div>
+      <span class="seal" id="footerSeal">◆ 理性吃瓜 ◆</span>
+      <span>&nbsp;·&nbsp;</span>
+      <span>© <span id="footerYear">2026</span> <span id="footerSiteName">吃瓜命理盘</span> · 仅供娱乐，请勿当真</span>
+    </div>
+    <div>
+      <a href="../pages/disclaimer.html">免责声明</a>
+      <a href="../pages/about.html">关于</a>
+      <a id="footerDomain" href="#">51chigua.solutions</a>
+      <a target="_blank" title="51la网站统计" href="https://v6.51.la/land/KhAJ9Mq8diK1cIAT"><img src="https://sdk.51.la/icon/1-5.png" loading="lazy" decoding="async" alt="" width="20" height="20"></a>
+      <a href="#" data-back-top title="回到顶部">↑ 回到顶部</a>
+    </div>
+  </div>
+</footer>
+
+<script>window.__FOOTER_OPTS={subBrand:'AI 创投命理盘',subSlogan:'AI 驱动的创投命理分析工具 · 企业家 × 企业合盘'};</script>
+<script src="../js/config.js" defer></script>
+<script src="../js/footer.js" defer></script>
+<script src="../js/qrcode-generator.js" defer></script>
+<script src="../js/share.js" defer></script>
+<script src="js/synastry-share.js" defer></script>
+<script src="js/synastry.js" defer></script>
+<script src="../js/analytics.js" defer></script>
+</body>
+</html>

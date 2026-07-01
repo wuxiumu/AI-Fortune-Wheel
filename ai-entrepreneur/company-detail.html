@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>企业详情 · AI 创投命理盘</title>
+  <meta name="description" content="AI 行业企业详细信息">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">🔮</span>
+          <span class="logo-text">AI 创投命理盘</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">首页</a>
+          <a href="synastry.html">合盘</a>
+          <a href="personalities.html">名人榜</a>
+          <a href="companies.html" class="active">企业榜</a>
+          <a href="admin/" class="btn btn-ghost btn-sm">管理后台</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Detail Content -->
+  <section class="detail-section">
+    <div class="container">
+      <div class="detail-card" id="companyDetail">
+        <div class="loading">加载中...</div>
+      </div>
+
+      <!-- 相关推荐 -->
+      <div class="related-section">
+        <h2 class="section-title">相关推荐</h2>
+        <div class="related-grid" id="relatedGrid"></div>
+      </div>
+
+      <!-- 返回按钮 -->
+      <div class="back-action">
+        <a href="companies.html" class="btn btn-ghost">
+          <span>← 返回企业榜</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="logo">
+            <span class="logo-icon">🔮</span>
+            <span class="logo-text">AI 创投命理盘</span>
+          </div>
+          <p>探索 AI 领袖之间的商业契合度</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">首页</a>
+          <a href="personalities.html">名人榜</a>
+          <a href="companies.html">企业榜</a>
+          <a href="admin/">管理后台</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 AI 创投命理盘 · 仅供娱乐参考</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data-loader.js" defer></script>
+  <script defer>
+    let allCompanies = [];
+
+    async function fetchWithTimeout(url, timeoutMs = 3000) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(timer);
+        return response;
+      } catch (e) {
+        clearTimeout(timer);
+        throw e;
+      }
+    }
+
+    async function loadData() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const companyName = urlParams.get('name');
+
+        if (!companyName) {
+          showError('缺少企业参数');
+          return;
+        }
+
+        allCompanies = await AIData.loadCompanies();
+
+        const response = await fetchWithTimeout(`api/company-detail.php?name=${encodeURIComponent(companyName)}`);
+        const result = await response.json();
+
+        if (result.success) {
+          renderDetail(result.data);
+          renderRelated(result.data);
+        } else {
+          showError('未找到该企业信息');
+        }
+      } catch (error) {
+        console.error('加载数据失败:', error);
+        showError('加载失败，请稍后重试');
+      }
+    }
+
+    // 渲染详情
+    function renderDetail(company) {
+      document.title = `${company.name} · AI 创投命理盘`;
+
+      const age = new Date().getFullYear() - parseInt(company.founded);
+      const tags = company.industryTags.split(',').map(t => t.trim());
+      const products = company.products.split(',').map(p => p.trim());
+
+      document.getElementById('companyDetail').innerHTML = `
+        <div class="detail-header">
+          <div class="detail-icon">🏢</div>
+          <div class="detail-info">
+            <h1 class="detail-name">${company.name}</h1>
+            <div class="detail-meta">
+              <span class="meta-badge">${company.industry}</span>
+              <span class="status-badge status-${company.status}">
+                ${getStatusText(company.status)}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-content">
+          <div class="detail-section-card">
+            <h3 class="section-heading">基本信息</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-label">国家</div>
+                <div class="info-value">🌍 ${company.country}</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">成立时间</div>
+                <div class="info-value">${company.founded} 年</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">公司年龄</div>
+                <div class="info-value">${age} 年</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">融资阶段</div>
+                <div class="info-value">${company.stage}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section-card">
+            <h3 class="section-heading">估值信息</h3>
+            <div class="valuation-display">
+              <div class="valuation-number">${company.valuation}</div>
+              <div class="valuation-label">公司估值</div>
+            </div>
+          </div>
+
+          <div class="detail-section-card full-width">
+            <h3 class="section-heading">主要产品</h3>
+            <div class="products-list">
+              ${products.map(p => `<span class="product-item">${p}</span>`).join('')}
+            </div>
+          </div>
+
+          <div class="detail-section-card full-width">
+            <h3 class="section-heading">行业标签</h3>
+            <div class="tags-list">
+              ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+          </div>
+
+          <div class="detail-section-card full-width">
+            <h3 class="section-heading">创始人</h3>
+            <div class="founders-list">
+              ${company.founders.split(',').map(f => `<span class="founder-item">👤 ${f.trim()}</span>`).join('')}
+            </div>
+          </div>
+
+          <div class="detail-section-card full-width">
+            <h3 class="section-heading">公司简介</h3>
+            <p class="bio-text">${company.description}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // 渲染相关推荐
+    function renderRelated(company) {
+      const related = allCompanies
+        .filter(c => c.industry === company.industry && c.name !== company.name)
+        .slice(0, 3);
+
+      if (related.length === 0) return;
+
+      document.getElementById('relatedGrid').innerHTML = related.map(c => `
+        <a href="company-detail.html?name=${encodeURIComponent(c.name)}" class="related-card">
+          <div class="related-name">${c.name}</div>
+          <div class="related-company">${c.country}</div>
+          <div class="related-role">${c.valuation}</div>
+        </a>
+      `).join('');
+    }
+
+    function getStatusText(status) {
+      const map = {
+        active: '运营中',
+        inactive: '已关闭',
+        acquired: '被收购'
+      };
+      return map[status] || status;
+    }
+
+    // 显示错误
+    function showError(message) {
+      document.getElementById('companyDetail').innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">⚠️</div>
+          <h3>${message}</h3>
+          <p>请返回企业榜重新选择</p>
+        </div>
+      `;
+    }
+
+    document.addEventListener('DOMContentLoaded', loadData);
+  </script>
+  <script src="../js/analytics.js" defer></script>
+</body>
+</html>
