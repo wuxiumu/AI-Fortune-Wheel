@@ -1,0 +1,48 @@
+{
+  "site": {
+    "title": "瓜占い盤",
+    "subtitle": "東西ダブルシステムCP相性診断",
+    "slogan": "芸能人CPマッチング · 噂の縁結び · 五行＆星座ダブル解釈 · エンタメ専用"
+  },
+  "header": {
+    "eyebrow": "EAST × WEST · CP DESTINY ROULETTE",
+    "east_tab": "東方十二支",
+    "east_sub": "ZODIAC · WU XING",
+    "west_tab": "西洋星座",
+    "west_sub": "ASTRO · ELEMENTS"
+  },
+  "picker": {
+    "side_a": "プレイヤー A",
+    "side_b": "プレイヤー B",
+    "placeholder_a": "名前A（任意）",
+    "placeholder_b": "名前B（任意）"
+  },
+  "actions": {
+    "spin": "回す · 診断する",
+    "random": "🎲 ランダム"
+  },
+  "result": {
+    "score_label": "相性%",
+    "share_poster": "🖼️ ポスター生成",
+    "share_copy": "📋 コピー",
+    "share_native": "🔗 共有",
+    "toast_copied": "クリップボードにコピーしました ✓",
+    "toast_copy_fail": "コピー失敗",
+    "toast_no_result": "まずペアを診断してください",
+    "tone_gold": "金線・高相性",
+    "tone_red": "赤線・波乱",
+    "tone_gray": "灰線・普通"
+  },
+  "footer": {
+    "about": "紹介",
+    "help": "ヘルプ",
+    "legal": "法的事項",
+    "disclaimer": "エンタメ専用です",
+    "back_top": "↑ トップへ"
+  },
+  "toast": {
+    "success": "成功",
+    "error": "エラー",
+    "loading": "処理中..."
+  }
+}

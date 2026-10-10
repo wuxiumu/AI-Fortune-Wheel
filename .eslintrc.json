@@ -1,0 +1,43 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "script"
+  },
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-undef": "error",
+    "semi": ["error", "always"],
+    "quotes": ["warn", "single", { "avoidEscape": true }],
+    "indent": ["warn", 2, { "SwitchCase": 1 }],
+    "no-console": "off",
+    "no-debugger": "error"
+  },
+  "globals": {
+    "SITE_CONFIG": "readonly",
+    "SITE_META": "readonly",
+    "qrcode": "readonly",
+    "EAST": "readonly",
+    "WEST": "readonly",
+    "EL_E": "readonly",
+    "EL_W": "readonly",
+    "EORD": "readonly",
+    "SIX": "readonly",
+    "W2E": "readonly",
+    "E2WAX": "readonly",
+    "CROSS": "readonly",
+    "BLURB": "readonly",
+    "API": "readonly",
+    "StarsDB": "readonly",
+    "UI": "readonly",
+    "History": "readonly",
+    "currentSys": "writable",
+    "selection": "writable",
+    "pickMode": "writable",
+    "lastResult": "writable",
+    "lastResultWest": "writable"
+  }
+}

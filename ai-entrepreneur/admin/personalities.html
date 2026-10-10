@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>名人管理 · AI Fortune Wheel</title>
+  <meta name="description" content="管理 AI 名人数据">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <!-- 侧边栏 -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="logo">
+        <span class="logo-icon">🔮</span>
+        <span class="logo-text">AI Fortune Wheel</span>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-title">数据管理</div>
+        <a href="index.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>仪表板</span>
+        </a>
+        <a href="personalities.html" class="nav-item active">
+          <span class="nav-icon">👥</span>
+          <span>名人管理</span>
+        </a>
+        <a href="companies.html" class="nav-item">
+          <span class="nav-icon">🏢</span>
+          <span>企业管理</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-title">前台预览</div>
+        <a href="../index.html" class="nav-item">
+          <span class="nav-icon">🏠</span>
+          <span>首页</span>
+        </a>
+        <a href="../personalities.html" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span>名人榜</span>
+        </a>
+        <a href="../companies.html" class="nav-item">
+          <span class="nav-icon">🏢</span>
+          <span>企业榜</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-title">系统</div>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">📦</span>
+          <span>数据备份</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">⚙️</span>
+          <span>系统设置</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">📖</span>
+          <span>使用文档</span>
+        </a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="../index.html" class="back-link">
+        <span>← 返回前台</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main class="main-content">
+    <header class="content-header">
+      <div class="header-left">
+        <h1 class="page-title">名人管理</h1>
+        <p class="page-desc">管理和编辑 AI 名人数据</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary" id="addBtn">
+          <span class="btn-icon">➕</span>
+          <span>添加名人</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="content-body">
+      <!-- 筛选栏 -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <input type="text" class="filter-input" id="searchInput" placeholder="搜索名人...">
+        </div>
+        <div class="filter-group">
+          <select class="filter-select" id="statusFilter">
+            <option value="all">全部状态</option>
+            <option value="active">活跃</option>
+            <option value="inactive">不活跃</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <select class="filter-select" id="categoryFilter">
+            <option value="all">全部分类</option>
+            <option value="硅谷巨头">硅谷巨头</option>
+            <option value="中国AI领袖">中国AI领袖</option>
+            <option value="欧洲AI领袖">欧洲AI领袖</option>
+            <option value="技术领袖">技术领袖</option>
+            <option value="AI投资人">AI投资人</option>
+            <option value="学术领袖">学术领袖</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 名人列表 -->
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>姓名</th>
+              <th>公司</th>
+              <th>职位</th>
+              <th>星座</th>
+              <th>生肖</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="personalitiesTable">
+            <tr>
+              <td colspan="7" class="empty-state">加载中...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 分页 -->
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </main>
+
+  <!-- 添加/编辑模态框 -->
+  <div class="modal" id="personModal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">添加名人</h2>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <form id="personForm" class="modal-body">
+        <div class="form-group">
+          <label class="form-label">姓名 <span class="required">*</span></label>
+          <input type="text" class="form-input" name="name" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">公司 <span class="required">*</span></label>
+            <input type="text" class="form-input" name="company" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">职位 <span class="required">*</span></label>
+            <input type="text" class="form-input" name="role" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">生日 <span class="required">*</span></label>
+            <input type="date" class="form-input" name="birth" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">状态</label>
+            <select class="form-select" name="status">
+              <option value="active">活跃</option>
+              <option value="inactive">不活跃</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">标签 <span class="required">*</span></label>
+          <input type="text" class="form-input" name="tags" placeholder="多个标签用逗号分隔" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">简介 <span class="required">*</span></label>
+          <textarea class="form-textarea" name="bio" rows="3" required></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" id="cancelBtn">取消</button>
+          <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    let personalities = [];
+    let currentPage = 1;
+    const pageSize = 10;
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPersonalities();
+      initEventListeners();
+    });
+
+    async function loadPersonalities() {
+      try {
+        // 这里应该调用后端 API 获取数据
+        // 暂时使用模拟数据
+        personalities = [
+          {
+            id: 1,
+            name: 'Sam Altman',
+            company: 'OpenAI',
+            role: 'CEO',
+            birth: '1985-04-22',
+            zodiac: '金牛座',
+            constellation: 'Taurus',
+            tags: 'AI领袖, Y Combinator',
+            bio: 'OpenAI CEO，前 Y Combinator 总裁',
+            status: 'active'
+          },
+          {
+            id: 2,
+            name: 'Elon Musk',
+            company: 'Tesla/SpaceX/xAI',
+            role: 'CEO',
+            birth: '1971-06-28',
+            zodiac: '巨蟹座',
+            constellation: 'Cancer',
+            tags: '科技狂人, 火星计划',
+            bio: 'Tesla、SpaceX、xAI 创始人',
+            status: 'active'
+          }
+        ];
+        renderTable();
+      } catch (error) {
+        console.error('加载名人数据失败:', error);
+      }
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('personalitiesTable');
+      const start = (currentPage - 1) * pageSize;
+      const end = start + pageSize;
+      const pageData = personalities.slice(start, end);
+
+      if (pageData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="empty-state">暂无数据</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = pageData.map(person => `
+        <tr>
+          <td><strong>${person.name}</strong></td>
+          <td>${person.company}</td>
+          <td>${person.role}</td>
+          <td>${person.zodiac}</td>
+          <td>${person.constellation || '-'}</td>
+          <td><span class="status-badge status-${person.status}">${person.status === 'active' ? '活跃' : '不活跃'}</span></td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon" onclick="editPerson(${person.id})" title="编辑">✏️</button>
+              <button class="btn-icon" onclick="deletePerson(${person.id})" title="删除">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      renderPagination();
+    }
+
+    function renderPagination() {
+      const totalPages = Math.ceil(personalities.length / pageSize);
+      const pagination = document.getElementById('pagination');
+
+      if (totalPages <= 1) {
+        pagination.innerHTML = '';
+        return;
+      }
+
+      let html = '';
+      for (let i = 1; i <= totalPages; i++) {
+        html += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+      }
+      pagination.innerHTML = html;
+    }
+
+    function changePage(page) {
+      currentPage = page;
+      renderTable();
+    }
+
+    function initEventListeners() {
+      // 添加按钮
+      document.getElementById('addBtn').addEventListener('click', () => {
+        openModal('添加名人');
+      });
+
+      // 搜索
+      document.getElementById('searchInput').addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const filtered = personalities.filter(p =>
+          p.name.toLowerCase().includes(query) ||
+          p.company.toLowerCase().includes(query)
+        );
+        // 渲染过滤结果
+      });
+
+      // 模态框关闭
+      document.getElementById('modalClose').addEventListener('click', closeModal);
+      document.getElementById('cancelBtn').addEventListener('click', closeModal);
+      document.querySelector('.modal-overlay').addEventListener('click', closeModal);
+
+      // 表单提交
+      document.getElementById('personForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+
+        // 这里应该调用后端 API 保存数据
+        console.log('保存数据:', data);
+        closeModal();
+        loadPersonalities();
+      });
+    }
+
+    function openModal(title) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('personModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('personModal').classList.remove('show');
+      document.body.style.overflow = '';
+      document.getElementById('personForm').reset();
+    }
+
+    function editPerson(id) {
+      const person = personalities.find(p => p.id === id);
+      if (!person) return;
+
+      openModal('编辑名人');
+      // 填充表单数据
+      const form = document.getElementById('personForm');
+      form.name.value = person.name;
+      form.company.value = person.company;
+      form.role.value = person.role;
+      form.birth.value = person.birth;
+      form.status.value = person.status;
+      form.tags.value = person.tags;
+      form.bio.value = person.bio;
+    }
+
+    async function deletePerson(id) {
+      if (!confirm('确定要删除这个名人吗？')) return;
+
+      // 这里应该调用后端 API 删除数据
+      console.log('删除名人:', id);
+      loadPersonalities();
+    }
+
+    // 全局函数
+    window.editPerson = editPerson;
+    window.deletePerson = deletePerson;
+    window.changePage = changePage;
+  </script>
+<script src="../../js/analytics.js"></script>
+</body>
+</html>

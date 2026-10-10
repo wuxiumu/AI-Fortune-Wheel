@@ -1,0 +1,48 @@
+{
+  "site": {
+    "title": "吃瓜命理盘",
+    "subtitle": "东西双体系CP速测",
+    "slogan": "明星CP配对 · 绯闻缘分速测 · 五行/星座双解 · 仅供娱乐吃瓜"
+  },
+  "header": {
+    "eyebrow": "EAST × WEST · CP DESTINY ROULETTE",
+    "east_tab": "东方五行生肖",
+    "east_sub": "ZODIAC · WU XING",
+    "west_tab": "西方星盘星座",
+    "west_sub": "ASTRO · ELEMENTS"
+  },
+  "picker": {
+    "side_a": "选手 A",
+    "side_b": "选手 B",
+    "placeholder_a": "明星A名字（可不填）",
+    "placeholder_b": "明星B名字（可不填）"
+  },
+  "actions": {
+    "spin": "开转 · 测这对",
+    "random": "🎲 随机吃瓜"
+  },
+  "result": {
+    "score_label": "适配度%",
+    "share_poster": "🖼️ 生成海报",
+    "share_copy": "📋 复制文案",
+    "share_native": "🔗 分享",
+    "toast_copied": "文案已复制到剪贴板 ✓",
+    "toast_copy_fail": "复制失败",
+    "toast_no_result": "请先测一对 CP",
+    "tone_gold": "金线·高适配",
+    "tone_red": "红线·争议瓜",
+    "tone_gray": "灰线·平淡型"
+  },
+  "footer": {
+    "about": "关于我们",
+    "help": "帮助 & 支持",
+    "legal": "法律 & 协议",
+    "disclaimer": "理性吃瓜，请勿当真",
+    "back_top": "↑ 回到顶部"
+  },
+  "toast": {
+    "success": "成功",
+    "error": "失败",
+    "loading": "处理中..."
+  }
+}

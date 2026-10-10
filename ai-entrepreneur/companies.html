@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 企业榜 · AI 创投命理盘</title>
+  <meta name="description" content="AI 行业企业榜，探索 AI 领域的顶尖公司">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">🔮</span>
+          <span class="logo-text">AI 创投命理盘</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">首页</a>
+          <a href="synastry.html">合盘</a>
+          <a href="personalities.html">名人榜</a>
+          <a href="companies.html" class="active">企业榜</a>
+          <a href="admin/" class="btn btn-ghost btn-sm">管理后台</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <h1 class="hero-title">
+        AI <span class="gradient-text">企业榜</span>
+      </h1>
+      <p class="hero-description">
+        探索 AI 领域的顶尖公司，了解他们的产品、估值和发展历程
+      </p>
+    </div>
+  </section>
+
+  <!-- Filter Bar -->
+  <section class="filter-section">
+    <div class="container">
+      <div class="filter-bar">
+        <input type="text" class="filter-input" id="searchInput" placeholder="搜索企业...">
+        <select class="filter-select" id="industryFilter">
+          <option value="all">全部行业</option>
+          <option value="大模型公司">大模型公司</option>
+          <option value="AI 基础设施公司">AI 基础设施</option>
+          <option value="AI 应用公司">AI 应用</option>
+        </select>
+        <select class="filter-select" id="statusFilter">
+          <option value="all">全部状态</option>
+          <option value="active">运营中</option>
+          <option value="inactive">已关闭</option>
+          <option value="acquired">被收购</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Companies Grid -->
+  <section class="companies-section">
+    <div class="container">
+      <div class="companies-grid" id="companiesGrid">
+        <div class="empty-state"><div class="empty-icon">⏳</div><h3>加载中...</h3></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="logo">
+            <span class="logo-icon">🔮</span>
+            <span class="logo-text">AI 创投命理盘</span>
+          </div>
+          <p>探索 AI 企业与投资标的的契合度</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">首页</a>
+          <a href="synastry.html">合盘</a>
+          <a href="personalities.html">名人榜</a>
+          <a href="companies.html">企业榜</a>
+          <a href="admin/">管理后台</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 AI 创投命理盘 · 仅供娱乐参考</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data-loader.js" defer></script>
+  <script defer>
+    let allCompanies = [];
+    let currentIndustry = 'all';
+    let currentStatus = 'all';
+
+    async function loadCompanies() {
+      const grid = document.getElementById('companiesGrid');
+      try {
+        allCompanies = await AIData.loadCompanies();
+        if (!allCompanies.length) throw new Error('empty');
+        renderCompanies();
+      } catch (error) {
+        console.error('加载企业数据失败:', error);
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">⚠️</div>
+            <h3>加载失败</h3>
+            <p>无法加载企业数据，请稍后重试</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderCompanies() {
+      const grid = document.getElementById('companiesGrid');
+      let filtered = allCompanies;
+
+      if (currentIndustry !== 'all') {
+        filtered = filtered.filter(c => c.industry === currentIndustry);
+      }
+      if (currentStatus !== 'all') {
+        filtered = filtered.filter(c => c.status === currentStatus);
+      }
+
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      if (searchQuery) {
+        filtered = filtered.filter(c =>
+          c.name.toLowerCase().includes(searchQuery) ||
+          c.country.toLowerCase().includes(searchQuery) ||
+          c.products.toLowerCase().includes(searchQuery)
+        );
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <h3>没有找到匹配的企业</h3>
+            <p>尝试调整筛选条件</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(company => `
+        <a href="company-detail.html?name=${encodeURIComponent(company.name)}" class="company-card">
+          <div class="company-header">
+            <div class="company-name">${company.name}</div>
+            <span class="status-badge status-${company.status}">
+              ${getStatusText(company.status)}
+            </span>
+          </div>
+          <div class="company-country">🌍 ${company.country}</div>
+          <div class="company-meta">
+            <span class="meta-item">💰 ${company.valuation}</span>
+            <span class="meta-item">📅 ${company.founded}</span>
+          </div>
+          <div class="company-stage">${company.stage}</div>
+          <div class="company-tags">
+            ${company.industryTags.split(',').slice(0, 2).map(tag => `
+              <span class="tag">${tag.trim()}</span>
+            `).join('')}
+          </div>
+        </a>
+      `).join('');
+    }
+
+    function getStatusText(status) {
+      const map = {
+        active: '运营中',
+        inactive: '已关闭',
+        acquired: '被收购'
+      };
+      return map[status] || status;
+    }
+
+    document.getElementById('searchInput').addEventListener('input', renderCompanies);
+    document.getElementById('industryFilter').addEventListener('change', (e) => {
+      currentIndustry = e.target.value;
+      renderCompanies();
+    });
+    document.getElementById('statusFilter').addEventListener('change', (e) => {
+      currentStatus = e.target.value;
+      renderCompanies();
+    });
+
+    document.addEventListener('DOMContentLoaded', loadCompanies);
+  </script>
+  <script src="../js/analytics.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 名人榜 · AI 创投命理盘</title>
+  <meta name="description" content="AI 行业领袖名人榜，探索 AI 领域的顶尖人物">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">🔮</span>
+          <span class="logo-text">AI 创投命理盘</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">首页</a>
+          <a href="synastry.html">合盘</a>
+          <a href="personalities.html" class="active">名人榜</a>
+          <a href="companies.html">企业榜</a>
+          <a href="admin/" class="btn btn-ghost btn-sm">管理后台</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <h1 class="hero-title">
+        AI <span class="gradient-text">名人榜</span>
+      </h1>
+      <p class="hero-description">
+        探索 AI 领域的顶尖领袖，了解他们的背景、成就和影响力
+      </p>
+    </div>
+  </section>
+
+  <!-- Filter Bar -->
+  <section class="filter-section">
+    <div class="container">
+      <div class="filter-bar">
+        <input type="text" class="filter-input" id="searchInput" placeholder="搜索名人...">
+        <select class="filter-select" id="categoryFilter">
+          <option value="all">全部分类</option>
+          <option value="硅谷巨头">硅谷巨头</option>
+          <option value="中国AI领袖">中国AI领袖</option>
+          <option value="欧洲AI领袖">欧洲AI领袖</option>
+          <option value="技术领袖">技术领袖</option>
+          <option value="AI投资人">AI投资人</option>
+          <option value="学术领袖">学术领袖</option>
+        </select>
+        <select class="filter-select" id="statusFilter">
+          <option value="all">全部状态</option>
+          <option value="active">活跃</option>
+          <option value="inactive">不活跃</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Personalities Grid -->
+  <section class="personalities-section">
+    <div class="container">
+      <div class="personalities-grid" id="personalitiesGrid">
+        <div class="empty-state"><div class="empty-icon">⏳</div><h3>加载中...</h3></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="logo">
+            <span class="logo-icon">🔮</span>
+            <span class="logo-text">AI 创投命理盘</span>
+          </div>
+          <p>探索 AI 领袖之间的商业契合度</p>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">首页</a>
+          <a href="synastry.html">合盘</a>
+          <a href="personalities.html">名人榜</a>
+          <a href="companies.html">企业榜</a>
+          <a href="admin/">管理后台</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 AI 创投命理盘 · 仅供娱乐参考</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data-loader.js" defer></script>
+  <script defer>
+    let allPersonalities = [];
+    let currentCategory = 'all';
+    let currentStatus = 'all';
+
+    async function loadPersonalities() {
+      const grid = document.getElementById('personalitiesGrid');
+      try {
+        allPersonalities = await AIData.loadPersonalities();
+        if (!allPersonalities.length) throw new Error('empty');
+        renderPersonalities();
+      } catch (error) {
+        console.error('加载名人数据失败:', error);
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">⚠️</div>
+            <h3>加载失败</h3>
+            <p>无法加载名人数据，请稍后重试</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderPersonalities() {
+      const grid = document.getElementById('personalitiesGrid');
+      let filtered = allPersonalities;
+
+      if (currentCategory !== 'all') {
+        filtered = filtered.filter(p => p.category === currentCategory);
+      }
+      if (currentStatus !== 'all') {
+        filtered = filtered.filter(p => p.status === currentStatus);
+      }
+
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      if (searchQuery) {
+        filtered = filtered.filter(p =>
+          p.name.toLowerCase().includes(searchQuery) ||
+          p.company.toLowerCase().includes(searchQuery) ||
+          p.tags.toLowerCase().includes(searchQuery)
+        );
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <h3>没有找到匹配的名人</h3>
+            <p>尝试调整筛选条件</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(person => `
+        <a href="person-detail-universal.html?name=${encodeURIComponent(person.name.toLowerCase().replace(/ /g, '-'))}" class="personality-card">
+          <div class="personality-header">
+            <div class="personality-name">${person.name}</div>
+            <span class="status-badge status-${person.status}">
+              ${person.status === 'active' ? '活跃' : '不活跃'}
+            </span>
+          </div>
+          <div class="personality-company">${person.company}</div>
+          <div class="personality-role">${person.role}</div>
+          <div class="personality-meta">
+            <span class="meta-item">⭐ ${person.zodiac}</span>
+            <span class="meta-item">🐾 ${person.constellation}</span>
+          </div>
+          <div class="personality-tags">
+            ${person.tags.split(',').slice(0, 3).map(tag => `
+              <span class="tag">${tag.trim()}</span>
+            `).join('')}
+          </div>
+        </a>
+      `).join('');
+    }
+
+    document.getElementById('searchInput').addEventListener('input', renderPersonalities);
+    document.getElementById('categoryFilter').addEventListener('change', (e) => {
+      currentCategory = e.target.value;
+      renderPersonalities();
+    });
+    document.getElementById('statusFilter').addEventListener('change', (e) => {
+      currentStatus = e.target.value;
+      renderPersonalities();
+    });
+
+    document.addEventListener('DOMContentLoaded', loadPersonalities);
+  </script>
+  <script src="../js/analytics.js" defer></script>
+</body>
+</html>

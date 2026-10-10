@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title id="pageTitle">吃瓜命理盘 · 东西双体系CP速测</title>
+  <meta name="description" id="pageDesc" content="明星CP配对 · 绯闻缘分速测 · 五行/星座双解 · 仅供娱乐吃瓜">
+  <meta name="keywords" id="pageKw" content="吃瓜,命理,CP配对,星座,五行">
+  <meta property="og:title" content="吃瓜命理盘 · 东西双体系CP速测">
+  <meta property="og:description" content="明星CP配对 · 绯闻缘分速测 · 五行/星座双解 · 仅供娱乐吃瓜">
+  <meta property="og:type" content="website">
+  <meta property="og:url" id="ogUrl" content="https://51chigua.solutions">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+  <!-- CSS 并行加载 -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ============ Header ============ -->
+  <header class="site-header">
+    <div class="eyebrow">EAST × WEST · CP DESTINY ROULETTE</div>
+    <h1 class="site-title">吃瓜命理盘</h1>
+    <div class="tagline">明星CP配对 · 绯闻缘分速测 · <b>五行 / 星座双解</b> · 仅供娱乐吃瓜</div>
+
+    <div class="toggle" role="tablist" aria-label="体系切换">
+      <button data-sys="east" role="tab">东方五行生肖<span class="sub">ZODIAC · WU XING</span></button>
+      <button data-sys="west" role="tab">西方星盘星座<span class="sub">ASTRO · ELEMENTS</span></button>
+    </div>
+  </header>
+
+  <!-- ============ Stage ============ -->
+  <div class="stage">
+    <div class="picker" data-side="a">
+      <h3><span class="dot a"></span>选手 A</h3>
+      <div class="picker-tabs">
+        <button class="tab-btn active" data-tab="search">搜索明星</button>
+        <button class="tab-btn" data-tab="birth">生日换算</button>
+        <button class="tab-btn" data-tab="manual">手动选择</button>
+      </div>
+      <div class="tab-content" id="tabSearchA">
+        <input class="name star-search" id="searchA" placeholder="输入明星名字搜索..." autocomplete="off">
+        <div class="search-results" id="searchResultsA"></div>
+      </div>
+      <div class="tab-content hidden" id="tabBirthA">
+        <input class="name birth-input" id="birthA" type="date" placeholder="选择生日">
+        <div class="birth-result" id="birthResultA"></div>
+      </div>
+      <div class="tab-content hidden" id="tabManualA">
+        <input class="name" id="nameA" placeholder="自定义名字（可不填）" maxlength="12">
+        <div class="chips" id="chipsA"></div>
+      </div>
+    </div>
+
+    <div class="wheelbox">
+      <svg id="wheel" viewBox="0 0 600 600" aria-label="命理轮盘"></svg>
+      <div class="actions">
+        <button class="btn primary" id="spin" disabled>开转 · 测这对</button>
+        <button class="btn ghost" id="rand">🎲 随机吃瓜</button>
+      </div>
+    </div>
+
+    <div class="picker" data-side="b">
+      <h3><span class="dot b"></span>选手 B</h3>
+      <div class="picker-tabs">
+        <button class="tab-btn active" data-tab="search">搜索明星</button>
+        <button class="tab-btn" data-tab="birth">生日换算</button>
+        <button class="tab-btn" data-tab="manual">手动选择</button>
+      </div>
+      <div class="tab-content" id="tabSearchB">
+        <input class="name star-search" id="searchB" placeholder="输入明星名字搜索..." autocomplete="off">
+        <div class="search-results" id="searchResultsB"></div>
+      </div>
+      <div class="tab-content hidden" id="tabBirthB">
+        <input class="name birth-input" id="birthB" type="date" placeholder="选择生日">
+        <div class="birth-result" id="birthResultB"></div>
+      </div>
+      <div class="tab-content hidden" id="tabManualB">
+        <input class="name" id="nameB" placeholder="自定义名字（可不填）" maxlength="12">
+        <div class="chips" id="chipsB"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Result Card ============ -->
+  <div class="result" id="result">
+    <div class="result-top">
+      <div class="score-ring">
+        <svg width="118" height="118">
+          <circle cx="59" cy="59" r="50" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/>
+          <circle id="scoreArc" cx="59" cy="59" r="50" fill="none" stroke="url(#sg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314"/>
+          <defs>
+            <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ff7eb3"/>
+              <stop offset="1" stop-color="#5b8def"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="num"><b id="scoreNum">0</b><span>适配度%</span></div>
+      </div>
+      <div class="r-head">
+        <p class="r-cp" id="rCp">—</p>
+        <div class="r-tags" id="rTags"></div>
+      </div>
+    </div>
+    <div class="r-body">
+      <p class="r-blurb" id="rBlurb"></p>
+      <div class="r-cross">
+        <span class="badge">东西互译</span>
+        <span id="rCross"></span>
+      </div>
+
+      <!-- 对比模式：东西双解并排 -->
+      <div class="compare-wrap">
+        <div class="compare-head">
+          <span class="badge">双体系对照</span>
+          <span>东方五行 vs 西方星座</span>
+        </div>
+        <div class="compare-grid" id="compareBox"></div>
+        <div class="compare-verdict" id="compareVerdict"></div>
+      </div>
+
+      <!-- 收藏按钮 -->
+      <div class="result-actions">
+        <button class="action-btn" id="btnFavorite">
+          <span class="icon">☆</span>
+          <span class="text">收藏</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 分享栏 -->
+    <div class="share-bar">
+      <span class="share-label">SHARE</span>
+      <button class="share-btn primary" id="sharePoster" title="生成海报图片">
+        <span class="ic">🖼️</span>生成海报
+      </button>
+      <button class="share-btn" id="shareCopy" title="复制分享文案">
+        <span class="ic">📋</span>复制文案
+      </button>
+      <button class="share-btn" id="shareNative" title="分享给好友">
+        <span class="ic">🔗</span>分享
+      </button>
+    </div>
+  </div>
+
+  <!-- 海报弹窗 -->
+  <div class="poster-modal" id="posterModal" role="dialog" aria-label="海报预览">
+    <div class="modal-inner" style="position:relative">
+      <button class="close-btn" id="posterClose" aria-label="关闭">✕</button>
+      <h3>🖼️ 吃瓜海报</h3>
+      <div class="poster-preview" id="posterPreview"></div>
+      <div class="poster-actions">
+        <button class="share-btn primary" id="posterDownload">
+          <span class="ic">⬇️</span>保存图片
+        </button>
+        <button class="share-btn" id="posterShare">
+          <span class="ic">📤</span>发给朋友
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast 提示 -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ============ Dual-system Rosetta ============ -->
+  <section class="block">
+    <div class="block-head">
+      <span class="kicker">Dual-system Rosetta</span>
+      <h2>双体系互译对照</h2>
+      <p>转动两套盘时可交叉对照，同一对 CP 既能用五行解、也能用星座解 —— 落点一致才是「双解石锤」。</p>
+    </div>
+    <table class="xtable">
+      <thead>
+        <tr><th>西方四象</th><th>东方五行</th><th>对应星座</th><th>吃瓜人设关键词</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="px" style="background:#ff7a59"></span>火象</td><td>火</td><td>白羊 / 狮子 / 射手</td><td>热搜体质，易爆恋情、撕逼上头</td></tr>
+        <tr><td><span class="px" style="background:#c99a6a"></span>土象</td><td>土</td><td>金牛 / 处女 / 摩羯</td><td>低调隐恋，长期稳定搭档</td></tr>
+        <tr><td><span class="px" style="background:#b79bff"></span>风象</td><td>木</td><td>双子 / 天秤 / 水瓶</td><td>社交暧昧多，营业感拉扯感重</td></tr>
+        <tr><td><span class="px" style="background:#5c8def"></span>水象</td><td>水</td><td>巨蟹 / 天蝎 / 双鱼</td><td>情绪纠葛，爱恨一体狗血瓜</td></tr>
+      </tbody>
+    </table>
+    <div class="verdict-legend">
+      <div class="vl good">
+        <b>金线 · 合拱相生</b>
+        <span>东方六合/三合 ＋ 西方合拱相 = 全网磕生磕死、二搭预定、荧幕天选 CP。</span>
+      </div>
+      <div class="vl bad">
+        <b>红线 · 冲刑相克</b>
+        <span>东方相冲 ＋ 西方刑/对冲相 = 频繁传不和、资源竞争、舆论两极分化。</span>
+      </div>
+    </div>
+    <div class="rosetta-action">
+      <button class="btn btn-secondary" id="rosettaDetailBtn">
+        <span class="icon">📖</span>
+        <span>查看完整对照详情</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ Design Notes ============ -->
+  <section class="block">
+    <div class="block-head">
+      <span class="kicker">Design Notes</span>
+      <h2>设计思路</h2>
+      <p>这套盘怎么从「策划案」变成「能转的页面」—— 六个关键决策。</p>
+    </div>
+    <div class="rat-grid">
+      <div class="rat wide" data-label="STRUCTURE">
+        <h4><span class="ic">◎</span>四层同心圆 · 一盘双体系</h4>
+        <p>整盘是「固定底盘 ＋ 可替换中层 ＋ 中心指针」的嵌套结构。东西方逻辑完全不同，但只换中间两层、外圈与圆心共用，所以「切系统」对用户来说只是盘面变色变字，不是换一个工具。</p>
+        <ul class="layer-list">
+          <li><b>最外层</b>：吃瓜标语装饰圈，固定不变，定调「仅供娱乐」。</li>
+          <li><b>元素环</b>：东方五行（5 色块）/ 西方四象（4 色块）随系统替换。</li>
+          <li><b>主盘环</b>：12 等分核心层，生肖地支 / 黄道星座，可点选可旋转。</li>
+          <li><b>圆心</b>：阴阳（东）/ 银河核（西）＋ 双金色指针，分别指向两位选手。</li>
+        </ul>
+      </div>
+      <div class="rat" data-label="COLOR">
+        <h4><span class="ic">⬡</span>配色即语义，不只是好看</h4>
+        <p>东方走<span class="hl">国风马卡龙</span>、西方走<span class="hb">星云渐变</span>，底盘统一银河夜色做承接。但真正干活的是三条线的颜色规则：<span class="hl">金线＝相合/相生</span>、<span class="hr">红线＝相冲/刑克</span>、灰线＝平淡。用户不用读字，看连线颜色就懂这对行不行。</p>
+        <p>东方盘额外保留了一个签名彩蛋 —— 五行相克连成的<span class="hr">红色五角星</span>，既准确又好看。</p>
+      </div>
+      <div class="rat" data-label="ENGINE">
+        <h4><span class="ic">⟲</span>关系算法：把命理写成代码</h4>
+        <p>东方按地支算<span class="hl">冲 / 六合 / 三合</span>，再叠加五行生克微调分数；西方按<span class="hl">合（三分/六分）/ 刑 / 对冲</span>相位，叠加同象异象。同一对永远算出同一个分，但不同对之间有起伏，避免一眼假。</p>
+      </div>
+      <div class="rat" data-label="VOICE">
+        <h4><span class="ic">✦</span>话术全部翻译成「娱乐圈语」</h4>
+        <p>不出现一句封建命理话术。所有结论只落在<span class="hb">营业、荧幕CP、绯闻舆论、二搭搭档</span>这些吃瓜场景里 —— 相冲不是「命犯凶煞」，是「资源对家、绯闻翻车」；六合不是「天作之合」，是「官配预定」。</p>
+      </div>
+      <div class="rat" data-label="SYNC">
+        <h4><span class="ic">⇄</span>双体系互译，给「双解」找台阶</h4>
+        <p>火象≈火、土象≈土、风象≈木、水象≈水。每次出结果都附一条互译注脚，让用户产生「五行和星座都这么说」的<span class="hb">双重盖章感</span>，这正是吃瓜内容最爱的传播点。</p>
+      </div>
+      <div class="rat" data-label="SAFE">
+        <h4><span class="ic">⚖</span>合规前置，不当真是设计的一部分</h4>
+        <p>标语、弹窗、页脚三处反复点题「仅供娱乐」。盘面彻底规避人生祸福、命运预测，只谈 CP 热度与舆论走向 —— 让「理性吃瓜」不是免责声明，而是产品定位本身。</p>
+      </div>
+    </div>
+    <div class="rosetta-action">
+      <button class="btn btn-secondary" id="designDetailBtn">
+        <span class="icon">🎨</span>
+        <span>查看完整设计思路</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ Hot CP Ranking ============ -->
+  <section class="block" id="hotSection">
+    <div class="block-head">
+      <span class="kicker">🔥 Hot Now</span>
+      <h2>热门 CP 榜</h2>
+      <p>全网最火 CP 配对，看看你磕的上榜了没</p>
+    </div>
+    <div class="hot-ranking" id="hotRanking">
+      <div class="ranking-loading">加载中...</div>
+    </div>
+  </section>
+
+  <!-- ============ AI 企业家版 ============ -->
+  <section class="block" id="aiEntrepreneurSection">
+    <div class="block-head">
+      <span class="kicker">✦ 创投专版</span>
+      <h2>AI 企业家版</h2>
+      <p>面向 AI 创投圈，测算企业家、企业与投资标的之间的命理契合度</p>
+    </div>
+    <div class="ai-entrepreneur-card">
+      <div class="ai-entrepreneur-content">
+        <div class="ai-entrepreneur-icon">🔮</div>
+        <div class="ai-entrepreneur-info">
+          <h3>AI 创投命理盘</h3>
+          <p class="ai-entrepreneur-desc">
+            探索 AI 领袖与企业之间的商业缘分。支持人物合盘、企业合盘、人企合盘，AI 现场解读。
+          </p>
+          <div class="ai-entrepreneur-stats">
+            <div class="stat-item">
+              <span class="stat-number">40+</span>
+              <span class="stat-label">AI 领袖</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">30+</span>
+              <span class="stat-label">AI 企业</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">3</span>
+              <span class="stat-label">合盘模式</span>
+            </div>
+          </div>
+          <div class="ai-entrepreneur-features">
+            <span class="feature-tag">人物合盘</span>
+            <span class="feature-tag">企业合盘</span>
+            <span class="feature-tag">投资分析</span>
+            <span class="feature-tag">AI 解读</span>
+          </div>
+        </div>
+      </div>
+      <div class="ai-entrepreneur-action">
+        <a href="ai-entrepreneur/synastry.html" class="btn btn-primary btn-lg">
+          <span>进入AI创投命理合盘</span>
+          <span class="btn-icon">→</span>
+        </a>
+        <a href="ai-entrepreneur/index.html" class="btn btn-primary btn-lg">
+          <span>AI创投命理盘介绍</span>
+          <span class="btn-icon">→</span>
+        </a>
+        <p class="ai-entrepreneur-note">
+          💡 支持企业微信付费，免费版也可体验基础合盘
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ History Panel ============ -->
+  <section class="block" id="historySection">
+    <div class="block-head">
+      <span class="kicker">My Records</span>
+      <h2>历史记录</h2>
+      <p>你测试过的 CP 配对都会保存在这里（最多 50 条）</p>
+    </div>
+    <div class="history-tabs">
+      <button class="history-tab active" data-panel="all">最近测试</button>
+      <button class="history-tab" data-panel="favorites">我的收藏</button>
+    </div>
+    <div class="history-actions">
+      <div class="sort-buttons">
+        <button class="sort-btn active" data-sort="desc" title="时间倒序">
+          <span class="icon">↓</span>
+          <span>最新在前</span>
+        </button>
+        <button class="sort-btn" data-sort="asc" title="时间正序">
+          <span class="icon">↑</span>
+          <span>最早在前</span>
+        </button>
+      </div>
+      <button class="clear-btn" id="clearHistoryBtn" title="清空所有记录">
+        <span class="icon">🗑️</span>
+        <span>清空</span>
+      </button>
+    </div>
+    <div class="history-content" id="historyContent">
+      <div class="history-empty">
+        <div class="empty-icon">📜</div>
+        <p>还没有测试记录</p>
+        <p class="hint">转动轮盘开始你的第一次吃瓜吧！</p>
+      </div>
+    </div>
+  </section>
+
+</div> <!-- /.wrap -->
+
+<!-- ============ Rosetta Detail Modal ============ -->
+<div class="modal" id="rosettaModal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content rosetta-modal-content">
+    <button class="modal-close" id="rosettaModalClose">&times;</button>
+    <div class="modal-header">
+      <h2>🌟 双体系互译对照详情</h2>
+      <p>深入了解东西方命理体系的对应关系</p>
+    </div>
+    <div class="modal-body">
+      <div class="rosetta-detail-section">
+        <h3>元素对应表</h3>
+        <div class="element-mapping-grid">
+          <div class="element-mapping-item fire">
+            <div class="mapping-icon">🔥</div>
+            <div class="mapping-content">
+              <h4>火 ↔ 火象星座</h4>
+              <p><strong>对应星座：</strong>白羊 · 狮子 · 射手</p>
+              <p><strong>核心特质：</strong>热情奔放、冲动直接、乐观积极</p>
+              <p><strong>感情特征：</strong>一见钟情型，爱得热烈，需要激情与新鲜感</p>
+            </div>
+          </div>
+          <div class="element-mapping-item earth">
+            <div class="mapping-icon">⛰️</div>
+            <div class="mapping-content">
+              <h4>土 ↔ 土象星座</h4>
+              <p><strong>对应星座：</strong>金牛 · 处女 · 摩羯</p>
+              <p><strong>核心特质：</strong>稳重踏实、务实坚持、追求稳定</p>
+              <p><strong>感情特征：</strong>细水长流型，感情深厚，追求长久稳定的关系</p>
+            </div>
+          </div>
+          <div class="element-mapping-item metal">
+            <div class="mapping-icon">⚔️</div>
+            <div class="mapping-content">
+              <h4>金 ↔ 风象星座</h4>
+              <p><strong>对应星座：</strong>双子 · 天秤 · 水瓶</p>
+              <p><strong>核心特质：</strong>理性灵活、善于沟通、追求自由</p>
+              <p><strong>感情特征：</strong>精神交流型，重视思想碰撞，需要智性吸引</p>
+            </div>
+          </div>
+          <div class="element-mapping-item water">
+            <div class="mapping-icon">💧</div>
+            <div class="mapping-content">
+              <h4>水 ↔ 水象星座</h4>
+              <p><strong>对应星座：</strong>巨蟹 · 天蝎 · 双鱼</p>
+              <p><strong>核心特质：</strong>敏感细腻、直觉敏锐、情感丰富</p>
+              <p><strong>感情特征：</strong>灵魂共鸣型，追求情感深度与心灵契合</p>
+            </div>
+          </div>
+          <div class="element-mapping-item wood">
+            <div class="mapping-icon">🌳</div>
+            <div class="mapping-content">
+              <h4>木 ↔ 特殊对应</h4>
+              <p><strong>对应星体：</strong>日 · 月 · 金星影响</p>
+              <p><strong>核心特质：</strong>生长发展、仁善拓展、积极向上</p>
+              <p><strong>感情特征：</strong>共同成长型，相互滋养，一起进步</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rosetta-detail-section">
+        <h3>关系类型详解</h3>
+        <div class="relationship-types-grid">
+          <div class="relationship-type gold">
+            <div class="type-header">
+              <span class="type-icon">✨</span>
+              <h4>金线关系（80-100分）</h4>
+            </div>
+            <div class="type-content">
+              <p><strong>东方六合</strong>：子鼠↔丑牛、寅虎↔亥猪等</p>
+              <p><strong>西方三分相</strong>：同象星座（120°）</p>
+              <p class="type-desc">天然吸引力强，价值观相近，互相成就，沟通顺畅</p>
+            </div>
+          </div>
+          <div class="relationship-type gray">
+            <div class="type-header">
+              <span class="type-icon">⚖️</span>
+              <h4>灰线关系（50-79分）</h4>
+            </div>
+            <div class="type-content">
+              <p><strong>东方相生</strong>：木生火、火生土等</p>
+              <p><strong>西方六分相</strong>：相性元素（60°）</p>
+              <p class="type-desc">关系平稳，需要努力经营，有潜力发展为深层关系</p>
+            </div>
+          </div>
+          <div class="relationship-type red">
+            <div class="type-header">
+              <span class="type-icon">⚡</span>
+              <h4>红线关系（0-49分）</h4>
+            </div>
+            <div class="type-content">
+              <p><strong>东方相冲</strong>：子鼠↔午马、丑牛↔未羊等</p>
+              <p><strong>西方对冲/刑相</strong>：对宫或90°相位</p>
+              <p class="type-desc">冲突较多，价值观差异大，需要大量磨合与包容</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rosetta-detail-section">
+        <h3>评分标准说明</h3>
+        <div class="scoring-explanation">
+          <div class="score-item">
+            <div class="score-badge">90-100</div>
+            <div class="score-info">
+              <strong>天作之合</strong>
+              <p>东方六合+相生 / 西方三分相+同象</p>
+            </div>
+          </div>
+          <div class="score-item">
+            <div class="score-badge">80-89</div>
+            <div class="score-info">
+              <strong>优质配对</strong>
+              <p>东方三合 / 西方六分相+元素相性</p>
+            </div>
+          </div>
+          <div class="score-item">
+            <div class="score-badge">60-79</div>
+            <div class="score-info">
+              <strong>平稳发展</strong>
+              <p>东方相生或比和 / 西方中性相位</p>
+            </div>
+          </div>
+          <div class="score-item">
+            <div class="score-badge">40-59</div>
+            <div class="score-info">
+              <strong>需要努力</strong>
+              <p>东方轻微相克 / 西方弱相位</p>
+            </div>
+          </div>
+          <div class="score-item">
+            <div class="score-badge">0-39</div>
+            <div class="score-info">
+              <strong>挑战重重</strong>
+              <p>东方相冲+相克 / 西方对冲相或刑相</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rosetta-detail-footer">
+        <a href="pages/rosetta.html" class="btn btn-primary">
+          <span>📖</span>
+          <span>查看完整页面</span>
+        </a>
+        <p class="modal-tip">包含更多案例、FAQ 和深度解读</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Design Detail Modal ============ -->
+
+<!-- ============ History View Modal ============ -->
+<div class="modal" id="historyViewModal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content history-view-modal">
+    <button class="modal-close" id="historyViewModalClose">&times;</button>
+    <div class="modal-header">
+      <h2>📜 配对详情</h2>
+      <p id="historyViewTime"></p>
+    </div>
+    <div class="modal-body">
+      <div class="history-view-content">
+        <div class="view-cp-info">
+          <div class="view-system-badge" id="viewSystemBadge"></div>
+          <h3 class="view-cp-text" id="viewCpText"></h3>
+        </div>
+
+        <div class="view-score-section">
+          <div class="view-score-ring">
+            <div class="view-score-number" id="viewScoreNumber"></div>
+            <div class="view-score-label">适配度</div>
+          </div>
+          <div class="view-tags" id="viewTags"></div>
+        </div>
+
+        <div class="view-details">
+          <div class="view-detail-item">
+            <strong>关系判定</strong>
+            <p id="viewHeadline"></p>
+          </div>
+          <div class="view-detail-item">
+            <strong>详细解读</strong>
+            <p id="viewBlurb"></p>
+          </div>
+          <div class="view-detail-item">
+            <strong>东西互译</strong>
+            <p id="viewCross"></p>
+          </div>
+        </div>
+
+        <div class="view-actions">
+          <button class="btn btn-primary" id="viewRetestBtn">
+            <span>🔄</span>
+            <span>重新测试这对 CP</span>
+          </button>
+          <button class="btn btn-ghost" id="viewCloseBtn">
+            <span>关闭</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="designModal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content design-modal-content">
+    <button class="modal-close" id="designModalClose">&times;</button>
+    <div class="modal-header">
+      <h2>🎨 设计思路详情</h2>
+      <p>从策划到产品的完整设计历程</p>
+    </div>
+    <div class="modal-body">
+      <div class="design-detail-section">
+        <h3>四层同心圆架构</h3>
+        <div class="layer-structure-compact">
+          <div class="layer-compact">
+            <div class="layer-badge">1</div>
+            <div class="layer-info">
+              <strong>最外层：吃瓜标语装饰圈</strong>
+              <p>固定不变，定调「仅供娱乐」</p>
+            </div>
+          </div>
+          <div class="layer-compact">
+            <div class="layer-badge">2</div>
+            <div class="layer-info">
+              <strong>元素环：五行/四象</strong>
+              <p>东方五行（5色）/ 西方四象（4色），系统切换时整环替换</p>
+            </div>
+          </div>
+          <div class="layer-compact">
+            <div class="layer-badge">3</div>
+            <div class="layer-info">
+              <strong>主盘环：核心交互层</strong>
+              <p>12地支生肖 / 12黄道星座，可点选、可旋转</p>
+            </div>
+          </div>
+          <div class="layer-compact">
+            <div class="layer-badge">4</div>
+            <div class="layer-info">
+              <strong>圆心：品牌标识</strong>
+              <p>东方阴阳 / 西方银河核 + 双金色指针</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="design-detail-section">
+        <h3>配色语义化</h3>
+        <p class="section-desc">颜色即信息，用户看颜色就懂关系</p>
+        <div class="color-legend-compact">
+          <div class="color-legend-item gold">
+            <div class="color-dot"></div>
+            <strong>金线 ＝ 相合/相生</strong>
+            <span>六合、三合、相生 → 甜蜜和谐</span>
+          </div>
+          <div class="color-legend-item red">
+            <div class="color-dot"></div>
+            <strong>红线 ＝ 相冲/刑克</strong>
+            <span>相冲、相克、对冲 → 冲突竞争</span>
+          </div>
+          <div class="color-legend-item gray">
+            <div class="color-dot"></div>
+            <strong>灰线 ＝ 平淡</strong>
+            <span>无明显关系 → 普通无感</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="design-detail-section">
+        <h3>关系算法设计</h3>
+        <p class="section-desc">确定性算法，同一对永远同一分</p>
+        <div class="algorithm-compact">
+          <div class="algo-group">
+            <h4>☯ 东方体系</h4>
+            <ul>
+              <li>地支关系：冲、六合、三合</li>
+              <li>五行生克：相生 +8 / 相克 -11</li>
+              <li>分数区间：12-98 分</li>
+            </ul>
+          </div>
+          <div class="algo-group">
+            <h4>✦ 西方体系</h4>
+            <ul>
+              <li>相位：合、三分、六分、刑、冲</li>
+              <li>元素相性：同象 +10 / 相性 +5</li>
+              <li>分数区间：12-98 分</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="design-detail-section">
+        <h3>娱乐圈语翻译</h3>
+        <div class="translation-compact">
+          <div class="trans-item">
+            <span class="trans-old">命犯凶煞</span>
+            <span class="trans-arrow">→</span>
+            <span class="trans-new">资源对家、绯闻翻车</span>
+          </div>
+          <div class="trans-item">
+            <span class="trans-old">天作之合</span>
+            <span class="trans-arrow">→</span>
+            <span class="trans-new">官配预定、荧幕天选</span>
+          </div>
+          <div class="trans-item">
+            <span class="trans-old">桃花劫</span>
+            <span class="trans-arrow">→</span>
+            <span class="trans-new">绯闻争议、舆论翻车</span>
+          </div>
+          <div class="trans-item">
+            <span class="trans-old">贵人相助</span>
+            <span class="trans-arrow">→</span>
+            <span class="trans-new">二搭搭档、资源互补</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="design-detail-section">
+        <h3>技术架构亮点</h3>
+        <div class="tech-highlights">
+          <div class="tech-item-compact">
+            <span class="tech-icon-compact">⚡</span>
+            <div>
+              <strong>零依赖</strong>
+              <p>前端不依赖任何框架或库</p>
+            </div>
+          </div>
+          <div class="tech-item-compact">
+            <span class="tech-icon-compact">🚀</span>
+            <div>
+              <strong>一键启动</strong>
+              <p>php server.php 即可运行</p>
+            </div>
+          </div>
+          <div class="tech-item-compact">
+            <span class="tech-icon-compact">📱</span>
+            <div>
+              <strong>响应式</strong>
+              <p>完美适配桌面、平板、手机</p>
+            </div>
+          </div>
+          <div class="tech-item-compact">
+            <span class="tech-icon-compact">🗄️</span>
+            <div>
+              <strong>Redis + 文件</strong>
+              <p>Redis 缓存 + 文件降级方案</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="design-detail-footer">
+        <a href="pages/design.html" class="btn btn-primary">
+          <span>🎨</span>
+          <span>查看完整设计页面</span>
+        </a>
+        <p class="modal-tip">包含完整架构图、算法详解、技术栈说明</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Footer（扩展版） ============ -->
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <!-- 品牌 -->
+    <div class="footer-brand">
+      <div class="logo" id="footerBrandName">吃瓜命理盘</div>
+      <div class="slogan" id="footerSlogan">
+        东西双体系 CP 速测，东方五行生肖 × 西方星盘星座，理性吃瓜，快乐磕糖。
+      </div>
+      <div class="footer-social" id="footerSocial" aria-label="社交媒体"></div>
+    </div>
+
+    <!-- 关于 -->
+    <div class="footer-col">
+      <h4>关于我们</h4>
+      <ul>
+        <li><a href="pages/about.html">项目介绍</a></li>
+        <li><a href="pages/design.html">🎨 设计思路</a></li>
+        <li><a href="pages/about.html#team">团队</a></li>
+        <li><a href="pages/about.html#story">品牌故事</a></li>
+      </ul>
+    </div>
+
+    <!-- 帮助 -->
+    <div class="footer-col">
+      <h4>帮助 &amp; 支持</h4>
+      <ul>
+        <li><a href="pages/rosetta.html">📖 双体系对照</a></li>
+        <li><a href="pages/faq.html">常见问题</a></li>
+        <li><a href="pages/contact.html">联系我们</a></li>
+        <li><a href="pages/faq.html#usage">使用说明</a></li>
+      </ul>
+    </div>
+
+    <!-- 法律 -->
+    <div class="footer-col">
+      <h4>法律 &amp; 协议</h4>
+      <ul>
+        <li><a href="pages/disclaimer.html">免责声明</a></li>
+        <li><a href="pages/disclaimer.html#privacy">隐私政策</a></li>
+        <li><a href="pages/disclaimer.html#terms">服务条款</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div>
+      <span class="seal" id="footerSeal">◆ 理性吃瓜 ◆</span>
+      <span>&nbsp;·&nbsp;</span>
+      <span>© <span id="footerYear">2026</span> <span id="footerSiteName">吃瓜命理盘</span> · 仅供娱乐，请勿当真</span>
+    </div>
+    <div>
+      <a href="pages/disclaimer.html">免责声明</a>
+      <a href="pages/about.html">关于</a>
+      <a id="footerDomain" href="#">51chigua.solutions</a>
+
+<a target="_blank" title="51la网站统计" href="https://v6.51.la/land/KhAJ9Mq8diK1cIAT"><img src="https://sdk.51.la/icon/1-5.png" loading="lazy" decoding="async" alt="" width="20" height="20"></a>
+      <a href="#" title="回到顶部">↑ 回到顶部</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ Scripts（顺序敏感，全部 defer 不阻塞首屏渲染） ============ -->
+<script src="js/config.js" defer></script>
+<script src="js/data.js" defer></script>
+<script src="js/engine.js" defer></script>
+<script src="js/wheel.js" defer></script>
+<script src="js/qrcode-generator.js" defer></script>
+<script src="js/share.js" defer></script>
+<script src="js/api.js" defer></script>
+<script src="js/stars.js" defer></script>
+<script src="js/modal.js" defer></script>
+<script src="js/ui.js" defer></script>
+<script src="js/history.js" defer></script>
+<script src="js/main.js" defer></script>
+<script src="js/analytics.js" defer></script>
+</body>
+</html>

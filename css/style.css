@@ -1,0 +1,12 @@
+/* ============================================================
+   吃瓜命理盘 · 主样式入口
+   按需拆分：
+     variables.css   — 主题变量
+     base.css        — 重置、字体、全局
+     layout.css      — 布局（header / stage / footer）
+     components.css  — 组件（picker / wheel / result / table / rat）
+   ============================================================ */
+@import url('variables.css');
+@import url('base.css');
+@import url('layout.css');
+@import url('components.css');

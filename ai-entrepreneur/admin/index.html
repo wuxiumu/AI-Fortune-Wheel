@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理后台 · AI Fortune Wheel</title>
+  <meta name="description" content="AI Fortune Wheel 管理后台 - 管理名人和企业数据">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <!-- 侧边栏 -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html" class="logo">
+        <span class="logo-icon">🔮</span>
+        <span class="logo-text">AI Fortune Wheel</span>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-title">数据管理</div>
+        <a href="index.html" class="nav-item active">
+          <span class="nav-icon">📊</span>
+          <span>仪表板</span>
+        </a>
+        <a href="personalities.html" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span>名人管理</span>
+        </a>
+        <a href="companies.html" class="nav-item">
+          <span class="nav-icon">🏢</span>
+          <span>企业管理</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-title">前台预览</div>
+        <a href="../index.html" class="nav-item">
+          <span class="nav-icon">🏠</span>
+          <span>首页</span>
+        </a>
+        <a href="../personalities.html" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span>名人榜</span>
+        </a>
+        <a href="../companies.html" class="nav-item">
+          <span class="nav-icon">🏢</span>
+          <span>企业榜</span>
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-title">系统</div>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">📦</span>
+          <span>数据备份</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">⚙️</span>
+          <span>系统设置</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">📖</span>
+          <span>使用文档</span>
+        </a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="../index.html" class="back-link">
+        <span>← 返回前台</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main class="main-content">
+    <header class="content-header">
+      <div class="header-left">
+        <h1 class="page-title">仪表板</h1>
+        <p class="page-desc">数据概览和管理</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-ghost" id="refreshBtn">
+          <span class="btn-icon">🔄</span>
+          <span>刷新数据</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="content-body">
+      <!-- 统计卡片 -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-info">
+            <div class="stat-number" id="totalPersonalities">0</div>
+            <div class="stat-label">AI 名人</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🏢</div>
+          <div class="stat-info">
+            <div class="stat-number" id="totalCompanies">0</div>
+            <div class="stat-label">AI 企业</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-info">
+            <div class="stat-number" id="activeCount">0</div>
+            <div class="stat-label">活跃数据</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-info">
+            <div class="stat-number" id="lastUpdate">-</div>
+            <div class="stat-label">最后更新</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 快捷操作 -->
+      <div class="quick-actions">
+        <h2 class="section-title">快捷操作</h2>
+        <div class="actions-grid">
+          <a href="personalities.html?action=add" class="action-card">
+            <div class="action-icon">➕</div>
+            <div class="action-title">添加名人</div>
+            <div class="action-desc">新增 AI 领袖信息</div>
+          </a>
+          <a href="companies.html?action=add" class="action-card">
+            <div class="action-icon">➕</div>
+            <div class="action-title">添加企业</div>
+            <div class="action-desc">新增 AI 公司信息</div>
+          </a>
+          <a href="personalities.html" class="action-card">
+            <div class="action-icon">📋</div>
+            <div class="action-title">查看名人</div>
+            <div class="action-desc">管理和编辑名人数据</div>
+          </a>
+          <a href="companies.html" class="action-card">
+            <div class="action-icon">📋</div>
+            <div class="action-title">查看企业</div>
+            <div class="action-desc">管理和编辑企业数据</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- 最近更新 -->
+      <div class="recent-updates">
+        <h2 class="section-title">最近更新</h2>
+        <div class="updates-list" id="updatesList">
+          <div class="update-item">
+            <div class="update-icon">📝</div>
+            <div class="update-content">
+              <div class="update-title">数据库初始化完成</div>
+              <div class="update-time">2026-06-30</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/admin.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // 初始化仪表板
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDashboardStats();
+    });
+
+    async function loadDashboardStats() {
+      try {
+        // 这里应该调用后端 API 获取统计数据
+        // 暂时使用模拟数据
+        document.getElementById('totalPersonalities').textContent = '40';
+        document.getElementById('totalCompanies').textContent = '37';
+        document.getElementById('activeCount').textContent = '72';
+        document.getElementById('lastUpdate').textContent = '06-30';
+      } catch (error) {
+        console.error('加载统计数据失败:', error);
+      }
+    }
+
+    // 刷新按钮
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+      location.reload();
+    });
+  </script>
+<script src="../../js/analytics.js"></script>
+</body>
+</html>
