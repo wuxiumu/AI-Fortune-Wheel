@@ -30,7 +30,7 @@ if (!$input || !isset($input['system']) || !isset($input['message'])) {
 }
 
 // Anthropic API 配置
-// TODO: 配置真实账号后，设置环境变量 ANTHROPIC_API_KEY 或直接填入
+// 通过环境变量 ANTHROPIC_API_KEY 配置；勿把密钥写入仓库
 $apiKey = getenv('ANTHROPIC_API_KEY') ?: '';
 
 if (empty($apiKey)) {

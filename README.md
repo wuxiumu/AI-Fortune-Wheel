@@ -36,6 +36,29 @@ php server.php
 npm install && npm test   # 可选：引擎单测
 ```
 
+
+## 环境变量
+
+复制 `.env.example` → `.env`（已 gitignore）。常用：
+
+| 变量 | 说明 |
+|---|---|
+| `APP_HOST` / `APP_PORT` | 监听地址（默认 `0.0.0.0:8000`） |
+| `REDIS_*` | 可选；不配则文件缓存 |
+| `ANTHROPIC_API_KEY` | 仅 `ai-entrepreneur` AI 解读；不配返回内置解读 |
+
+`./start.sh` 会自动 `source .env`（不覆盖已有环境变量）。
+
+## 冒烟自检
+
+```bash
+bash scripts/smoke.sh
+# 或
+npm run smoke
+```
+
+无需 Redis / API Key：跑引擎单测 + 临时起 PHP 站探测首页与 `api/data/east.json`。
+
 ## 定制合作（可报价）
 
 - 换题材数据（娱圈 / 品牌 IP / 企业内部趣味测）  

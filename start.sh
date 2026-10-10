@@ -4,6 +4,15 @@
 
 set -e
 
+# 加载同目录 .env（若存在；不覆盖已导出的变量）
+SCRIPT_DIR_EARLY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+if [[ -f "${SCRIPT_DIR_EARLY}/.env" ]]; then
+  set -a
+  # shellcheck disable=SC1091
+  source "${SCRIPT_DIR_EARLY}/.env"
+  set +a
+fi
+
 HOST="${APP_HOST:-0.0.0.0}"
 PORT="${APP_PORT:-8000}"
 
